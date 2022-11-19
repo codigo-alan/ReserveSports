@@ -22,6 +22,7 @@ repositories {
     mavenCentral()
 }
 
+val exposedVersion: String by project
 dependencies {
     implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor_version")
@@ -32,4 +33,11 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
     //to html
     implementation("io.ktor:ktor-server-html-builder:$ktor_version")
+    //Exposed ORM
+    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
+    implementation("org.slf4j:slf4j-simple:2.0.3")
+    //postgreSQL
+    implementation("org.postgresql:postgresql:42.2.2")
 }
