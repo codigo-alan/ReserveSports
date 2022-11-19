@@ -9,4 +9,5 @@ data class User(val id: Int, var name: String)
 object UserDaoTable: Table(){
     val id = integer("id")
     var name = varchar("name", 50)
+    override val primaryKey = PrimaryKey(UserDaoTable.id, name = "pk_user")
 }
