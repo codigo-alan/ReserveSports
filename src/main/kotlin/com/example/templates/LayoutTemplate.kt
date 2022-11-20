@@ -1,11 +1,14 @@
 package com.example.templates
 
+import com.example.models.RoomDaoRepository
 import io.ktor.server.html.*
 import kotlinx.html.*
 
 class LayoutTemplate: Template<HTML> {
 
     lateinit var content: String
+    lateinit var roomDaoRepository: RoomDaoRepository
+    lateinit var roomId: String
 
     override fun HTML.apply() {
 
@@ -46,6 +49,16 @@ class LayoutTemplate: Template<HTML> {
                         }
                     }
                 }
+            }
+
+            when (content) {
+                "all" -> {
+                    insert(AllRoomsTemplate(roomDaoRepository), TemplatePlaceholder())
+                }
+                "detail" -> {
+                    insert(DetailRoomTemplate(roomDaoRepository, roomId), TemplatePlaceholder())
+                }
+
             }
 
         }
