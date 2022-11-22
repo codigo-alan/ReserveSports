@@ -11,11 +11,11 @@ class RoomDaoRepository {
         RoomDaoTable.selectAll().map(::dbToModel)
     }
 
-    private fun dbToModel(resultRow: ResultRow): Room =
-        Room(resultRow[RoomDaoTable.id], resultRow[RoomDaoTable.name], resultRow[RoomDaoTable.description], resultRow[RoomDaoTable.image])
-
     fun getItem(roomId: Int) = transaction {
         RoomDaoTable.select { RoomDaoTable.id eq roomId }.map(::dbToModel).firstOrNull()
     }
+
+    private fun dbToModel(resultRow: ResultRow): Room =
+        Room(resultRow[RoomDaoTable.id], resultRow[RoomDaoTable.name], resultRow[RoomDaoTable.description], resultRow[RoomDaoTable.image])
 
 }
