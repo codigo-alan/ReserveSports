@@ -21,7 +21,7 @@ class DetailRoomTemplate(private val roomDaoRepository: RoomDaoRepository, priva
                     td {
                         img {
                             id = "imagenPrueba"
-                            src = "/static/uploads/asPica.png"
+                            src = "/static/files/logo.png"
                             width = "50px"
                             height = "50px"
                         }

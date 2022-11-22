@@ -27,7 +27,7 @@ class AllRoomsTemplate(private val roomDaoRepository: RoomDaoRepository): Templa
                         td { +"""${it.name}""" }
                         td {
                             a {
-                                href = "room/detail/${it.id}"
+                                href = "detail/${it.id}"
                                 +"""Ver detalle"""
                             }
                         }
