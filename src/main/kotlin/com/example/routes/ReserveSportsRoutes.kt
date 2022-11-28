@@ -1,6 +1,8 @@
 package com.example.routes
 
 import com.example.models.RoomDaoRepository
+import com.example.templates.AllRoomsTemplate
+import com.example.templates.DetailRoomTemplate
 import com.example.templates.LayoutTemplate
 import io.ktor.server.application.*
 import io.ktor.server.html.*
@@ -13,17 +15,15 @@ fun Route.reserveSportsRouting() {
     route("/sports") {
 
         get("all") {
-            call.respondHtmlTemplate(LayoutTemplate()) {
-                this.content = "all"
-                this.roomDaoRepository = roomDaoRepository
+            val listRooms = roomDaoRepository.getItemList()
+            call.respondHtmlTemplate(LayoutTemplate(AllRoomsTemplate(listRooms))) {
             }
         }
         get("detail/{id}") {
             val id = call.parameters["id"]!!
-            call.respondHtmlTemplate(LayoutTemplate()) {
-                this.content = "detail"
-                this.roomDaoRepository = roomDaoRepository
-                this.roomId = id
+            val room = roomDaoRepository.getItem(id.toInt())
+            call.respondHtmlTemplate(LayoutTemplate(DetailRoomTemplate(room!!))) {
+
             }
         }
 

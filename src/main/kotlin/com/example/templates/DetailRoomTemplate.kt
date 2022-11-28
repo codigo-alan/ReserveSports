@@ -1,12 +1,12 @@
 package com.example.templates
 
+import com.example.models.Room
 import com.example.models.RoomDaoRepository
 import io.ktor.server.html.*
 import kotlinx.html.*
 
-class DetailRoomTemplate(private val roomDaoRepository: RoomDaoRepository, private val roomId: String): Template<FlowContent> {
+class DetailRoomTemplate(private val room: Room): Template<FlowContent> {
     override fun FlowContent.apply() {
-        val room = roomDaoRepository.getItem(roomId.toInt())
         div("detail") {
             h3 { +"Detalle de la sala" }
             table {

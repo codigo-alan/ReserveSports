@@ -1,10 +1,11 @@
 package com.example.templates
 
+import com.example.models.Room
 import com.example.models.RoomDaoRepository
 import io.ktor.server.html.*
 import kotlinx.html.*
 
-class AllRoomsTemplate(private val roomDaoRepository: RoomDaoRepository): Template<FlowContent> {
+class AllRoomsTemplate(private val rooms: List<Room>): Template<FlowContent> {
     override fun FlowContent.apply() {
         div("all") {
             h3 { +"Listado de salas" }
@@ -14,7 +15,7 @@ class AllRoomsTemplate(private val roomDaoRepository: RoomDaoRepository): Templa
                     th { +"""Name""" }
                     th { +"""Description""" }
                 }
-                roomDaoRepository.getItemList().forEach {
+                rooms.forEach {
                     tr {
                         td {
                             img {
