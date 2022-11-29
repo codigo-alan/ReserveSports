@@ -1,5 +1,7 @@
-package com.example.models
+package com.example.models.reserve
 
+import com.example.models.room.RoomDaoTable
+import com.example.models.user.UserDaoTable
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.Table
 

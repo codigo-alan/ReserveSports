@@ -1,17 +1,14 @@
 package com.example.templates
 
-import com.example.models.RoomDaoRepository
 import io.ktor.server.html.*
 import kotlinx.html.*
 
-class LayoutTemplate: Template<HTML> {
 
-    lateinit var content: String
-    lateinit var roomDaoRepository: RoomDaoRepository
-    lateinit var roomId: String
 
+class LayoutTemplate<T : Template<FlowContent>>(private val template: T): Template<HTML> {
+    //val header = Placeholder<FlowContent>()
+    val content = TemplatePlaceholder<T>()
     override fun HTML.apply() {
-
         head {
             link(rel = "stylesheet", href = "/static/main.css", type = "text/css")
             link(rel = "icon", href = "/static/logo.png", type = "image/png")
@@ -38,29 +35,22 @@ class LayoutTemplate: Template<HTML> {
                     }
                     li {
                         a {
-                            href = "/sports/add"
+                            href = "/sports/add-reserve"
                             +"""Nueva reserva"""
                         }
                     }
                     li {
                         a {
-                            href = "/sports/aboutus"
-                            +"""About us"""
+                            href = "/users/detail" //TODO not implemented
+                            +"""Info usuario"""
                         }
                     }
                 }
             }
 
-            when (content) {
-                "all" -> {
-                    insert(AllRoomsTemplate(roomDaoRepository), TemplatePlaceholder())
-                }
-                "detail" -> {
-                    insert(DetailRoomTemplate(roomDaoRepository, roomId), TemplatePlaceholder())
-                }
-
-            }
+            insert(template, content)
 
         }
+
     }
 }

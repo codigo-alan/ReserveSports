@@ -1,4 +1,4 @@
-package com.example.models
+package com.example.models.room
 
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.select
