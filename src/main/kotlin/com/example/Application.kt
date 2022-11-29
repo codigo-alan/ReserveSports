@@ -1,8 +1,8 @@
 package com.example
 
-import com.example.models.ReserveDaoTable
-import com.example.models.RoomDaoTable
-import com.example.models.UserDaoTable
+import com.example.models.reserve.ReserveDaoTable
+import com.example.models.room.RoomDaoTable
+import com.example.models.user.UserDaoTable
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*

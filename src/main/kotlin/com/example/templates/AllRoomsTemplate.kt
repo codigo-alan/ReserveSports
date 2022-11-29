@@ -1,7 +1,6 @@
 package com.example.templates
 
-import com.example.models.Room
-import com.example.models.RoomDaoRepository
+import com.example.models.room.Room
 import io.ktor.server.html.*
 import kotlinx.html.*
 

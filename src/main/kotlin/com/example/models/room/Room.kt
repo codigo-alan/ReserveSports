@@ -1,6 +1,5 @@
-package com.example.models
+package com.example.models.room
 
-import com.example.models.UserDaoTable.uniqueIndex
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.Table
 
