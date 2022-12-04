@@ -1,4 +1,4 @@
-package com.example.templates
+package com.example.templates.room
 
 import com.example.models.room.Room
 import io.ktor.server.html.*
@@ -16,10 +16,10 @@ class AllRoomsTemplate(private val rooms: List<Room>): Template<FlowContent> {
                 }
                 rooms.forEach {
                     tr {
-                        td {
-                            img {
+                        td {//TODO not completed
+                            img (classes = "tableImg"){
                                 id = "${it.id}"
-                                src = "/static/${it.image}" //TODO need change
+                                src = "/sports/uploads/${it.image}" //this is the source of the image, view GET in movie routes
                                 width = "50px"
                                 height = "50px"
                             }

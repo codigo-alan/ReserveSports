@@ -15,15 +15,15 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 fun main() {
 
-    //Database.connect("jdbc:postgresql://localhost:5432/sports", driver = "org.postgresql.Driver", user = "sports", password = "sports")//Para usar en ordenador Alan
-    Database.connect("jdbc:postgresql://localhost:5432/sports", driver = "org.postgresql.Driver", user = "sjo") //Para usar en ITB
+    Database.connect("jdbc:postgresql://localhost:5432/sports", driver = "org.postgresql.Driver", user = "sports", password = "sports")//Para usar en ordenador Alan
+    //Database.connect("jdbc:postgresql://localhost:5432/sports", driver = "org.postgresql.Driver", user = "sjo") //Para usar en ITB
 
     transaction {
         addLogger(StdOutSqlLogger)
         //createTable if not exists
         SchemaUtils.create(RoomDaoTable)
         SchemaUtils.create(UserDaoTable)
-        SchemaUtils.create(ReserveDaoTable)
+        //SchemaUtils.create(ReserveDaoTable)
 
     }
 

@@ -1,4 +1,4 @@
-package com.example.templates
+package com.example.templates.reserve
 
 import io.ktor.server.html.*
 import kotlinx.html.*

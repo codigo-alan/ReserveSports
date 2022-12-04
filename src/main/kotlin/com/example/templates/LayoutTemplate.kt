@@ -45,6 +45,18 @@ class LayoutTemplate<T : Template<FlowContent>>(private val template: T): Templa
                             +"""Info usuario"""
                         }
                     }
+                    li {
+                        a {
+                            href = "/users/add-user"
+                            +"""Nuevo usuario"""
+                        }
+                    }
+                    li {
+                        a {
+                            href = "/users/all"
+                            +"""Usuarios"""
+                        }
+                    }
                 }
             }
 

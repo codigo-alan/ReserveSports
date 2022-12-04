@@ -1,4 +1,4 @@
-package com.example.templates
+package com.example.templates.user
 
 import com.example.models.user.User
 import io.ktor.server.html.*

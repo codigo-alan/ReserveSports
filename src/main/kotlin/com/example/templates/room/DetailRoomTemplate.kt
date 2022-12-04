@@ -1,4 +1,4 @@
-package com.example.templates
+package com.example.templates.room
 
 import com.example.models.room.Room
 import io.ktor.server.html.*
