@@ -7,6 +7,10 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class UserDaoRepository () {
+
+    fun getOwnReserves() {
+        //TODO NOT IMPLEMENTED yet
+    }
     fun getItemList() = transaction {
         UserDaoTable.selectAll().map(::dbToModel)
     }

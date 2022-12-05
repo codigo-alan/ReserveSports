@@ -38,6 +38,8 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("org.slf4j:slf4j-simple:2.0.3")
+    //exposed type date
+    implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
     //postgreSQL
     implementation("org.postgresql:postgresql:42.2.2")
 }

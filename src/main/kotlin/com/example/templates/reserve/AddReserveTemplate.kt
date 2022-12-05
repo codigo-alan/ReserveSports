@@ -30,7 +30,7 @@ class AddReserveTemplate(): Template<FlowContent> {
             br {
             }
             input {
-                type = InputType.text
+                type = InputType.dateTimeLocal
                 id = "start"
                 name = "start"
                 value = ""
@@ -46,7 +46,7 @@ class AddReserveTemplate(): Template<FlowContent> {
             br {
             }
             input {
-                type = InputType.text
+                type = InputType.dateTimeLocal
                 id = "end"
                 name = "end"
                 value = ""
