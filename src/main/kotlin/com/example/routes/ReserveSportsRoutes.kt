@@ -1,5 +1,6 @@
 package com.example.routes
 
+import com.example.models.Formatter
 import com.example.models.reserve.Reserve
 import com.example.models.reserve.ReserveDaoRepository
 import com.example.models.room.RoomDaoRepository
@@ -21,13 +22,13 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import java.io.File
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 fun Route.reserveSportsRouting() {
 
     val roomDaoRepository = RoomDaoRepository()
     val userDaoRepository = UserDaoRepository()
     val reserveDaoRepository = ReserveDaoRepository()
+    val formatter = Formatter()
 
     route("/sports") {
 
@@ -49,13 +50,12 @@ fun Route.reserveSportsRouting() {
 
         //post neccesary to post the data from the input
         post("reserve-action_page") {
-            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-            var id: Int = 1
+            //val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+            var id: Int = -1
             var startTimeStamp: LocalDateTime = LocalDateTime.now()
-            //println(startTimeStamp)
             var endTimeStamp: LocalDateTime = LocalDateTime.now()
-            var idRoom: Int = 1
-            var idUser: Int= 1
+            var idRoom: Int = -1
+            var idUser: Int= -1
 
             val data = call.receiveMultipart()
             data.forEachPart { part ->
@@ -64,12 +64,14 @@ fun Route.reserveSportsRouting() {
                         when (part.name) {
                             "id" -> id = part.value.toInt()
                             "start" -> {
-                                val textDateTime = part.value.replace('T',' ')
-                                startTimeStamp = LocalDateTime.parse(textDateTime, formatter)
+                                startTimeStamp = formatter.formatToDateTime(part.value)
+                                /*val textDateTime = part.value.replace('T',' ')
+                                startTimeStamp = LocalDateTime.parse(textDateTime, formatter)*/
                             }
                             "end" -> {
-                                val textDateTime = part.value.replace('T',' ')
-                                endTimeStamp = LocalDateTime.parse(textDateTime, formatter)
+                                endTimeStamp = formatter.formatToDateTime(part.value)
+                                /*val textDateTime = part.value.replace('T',' ')
+                                endTimeStamp = LocalDateTime.parse(textDateTime, formatter)*/
                             }
                             "idRoom" -> idRoom = part.value.toInt()
                             "idUser" -> idUser = part.value.toInt()
@@ -82,12 +84,9 @@ fun Route.reserveSportsRouting() {
                     }
                     else -> {}
                 }
-
             }
 
             val reserve = Reserve(id, startTimeStamp.toString(), endTimeStamp.toString(), idRoom, idUser) //pass all parameters to create the new Reserve
-            println(startTimeStamp)
-            println(startTimeStamp).toString()
             reserveDaoRepository.addItem(reserve)
             call.respondText("Reserva generada", status = HttpStatusCode.Created)
 
