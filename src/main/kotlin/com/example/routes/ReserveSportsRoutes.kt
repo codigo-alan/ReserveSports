@@ -40,9 +40,11 @@ fun Route.reserveSportsRouting() {
         get("detail/{id}") {
             val id = call.parameters["id"]!!
             val room = roomDaoRepository.getItem(id.toInt())
-            call.respondHtmlTemplate(LayoutTemplate(DetailRoomTemplate(room!!))) {
+            val reserves = reserveDaoRepository.getItemListByRoom(id.toInt())
+            call.respondHtmlTemplate(LayoutTemplate(DetailRoomTemplate(room!!, reserves))) {
             }
         }
+
         get("add-reserve") {
             call.respondHtmlTemplate(LayoutTemplate(AddReserveTemplate())) {
             }

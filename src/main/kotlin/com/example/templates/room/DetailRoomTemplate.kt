@@ -1,10 +1,11 @@
 package com.example.templates.room
 
+import com.example.models.reserve.Reserve
 import com.example.models.room.Room
 import io.ktor.server.html.*
 import kotlinx.html.*
 
-class DetailRoomTemplate(private val room: Room): Template<FlowContent> {
+class DetailRoomTemplate(private val room: Room, private val reserves: List<Reserve>): Template<FlowContent> {
     override fun FlowContent.apply() {
         div("detail") {
             h3 { +"Detalle de la sala" }
@@ -30,6 +31,26 @@ class DetailRoomTemplate(private val room: Room): Template<FlowContent> {
                 }
 
             }
+
+        }
+        div("detail") {
+            h3 { +"Reservas en la sala" }
+            table {
+                style = "width:100%"
+                tr {
+                    th { +"""Imágen""" }
+                    th { +"""Nombre""" }
+                }
+                reserves.forEach {
+                    tr {
+                        td { +"""${it?.startDateTime}""" }
+                        td { +"""${it?.endDateTime}""" }
+                    }
+                }
+
+
+            }
+
         }
 
     }

@@ -12,17 +12,43 @@ import java.time.format.DateTimeFormatter
 class ReserveDaoRepository {
     private val formatter = Formatter()
     fun verifyReserve(newReserve: Reserve): Boolean { //TODO need test
+        //var isCorrect: Boolean = false
         val startDateTime = formatter.formatToDateTime(newReserve.startDateTime)//formatToDateTime(newReserve.startDateTime)
         val endDateTime = formatter.formatToDateTime(newReserve.endDateTime)//formatToDateTime(newReserve.endDateTime)
-        ReserveDaoTable.selectAll().forEach {
-            return if(startDateTime.isAfter(it[ReserveDaoTable.startDateTime]) && startDateTime.isBefore(it[ReserveDaoTable.endDateTime]) ){
-                false
-            }else !(startDateTime.isBefore(it[ReserveDaoTable.startDateTime]) && endDateTime.isAfter(it[ReserveDaoTable.startDateTime]))
+        for (resultRow in ReserveDaoTable.selectAll()) {
+            val columnStartTime = resultRow[ReserveDaoTable.startDateTime]
+            val columnEndTime = resultRow[ReserveDaoTable.endDateTime]
+            if (newReserve.idRoom == resultRow[ReserveDaoTable.idRoom]) {
+                println(newReserve.id)
+                println(resultRow[ReserveDaoTable.id])
+                //start or end between
+                if ((startDateTime.isAfter(columnStartTime) && startDateTime.isBefore(columnEndTime)) ||
+                    (endDateTime.isAfter(columnStartTime) && endDateTime.isBefore(columnEndTime))){
+                    return false
+                }
+                //start or end equals
+                if ((startDateTime.isEqual(columnStartTime) || startDateTime.isEqual(columnEndTime)) ||
+                    (endDateTime.isEqual(columnStartTime) || endDateTime.isEqual(columnEndTime))){
+                    return false
+                }
+                //start before and end after
+                if (startDateTime.isBefore(columnStartTime) && endDateTime.isAfter(columnEndTime)){
+                    return false
+                }
+
+            }
         }
         return true
     }
     fun getItemList() = transaction {
         ReserveDaoTable.selectAll().map(::dbToModel)
+    }
+
+    fun getItemListByRoom(idRoom: Int) = transaction {
+        ReserveDaoTable.select{ ReserveDaoTable.idRoom eq idRoom }.map(::dbToModel)
+    }
+    fun getItemListByUser(idUser: Int) = transaction {
+        ReserveDaoTable.select{ ReserveDaoTable.idUser eq idUser }.map(::dbToModel)
     }
 
     fun getItem(reserveId: Int) = transaction {
