@@ -38,8 +38,8 @@ class DetailRoomTemplate(private val room: Room, private val reserves: List<Rese
             table {
                 style = "width:100%"
                 tr {
-                    th { +"""Imágen""" }
-                    th { +"""Nombre""" }
+                    th { +"""Hora de inicio""" }
+                    th { +"""Hora de fin""" }
                 }
                 reserves.forEach {
                     tr {

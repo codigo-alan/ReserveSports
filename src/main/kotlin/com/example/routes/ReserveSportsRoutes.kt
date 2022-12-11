@@ -8,6 +8,7 @@ import com.example.models.user.User
 import com.example.models.user.UserDaoRepository
 import com.example.templates.*
 import com.example.templates.reserve.AddReserveTemplate
+import com.example.templates.reserve.DetailReserveTemplate
 import com.example.templates.room.AllRoomsTemplate
 import com.example.templates.room.DetailRoomTemplate
 import com.example.templates.user.AddUserTemplate
@@ -50,9 +51,20 @@ fun Route.reserveSportsRouting() {
             }
         }
 
+        get("reserves/detail/{id}") {
+            val id = call.parameters["id"]!!
+            val reserve = reserveDaoRepository.getItem(id.toInt())
+            call.respondHtmlTemplate(LayoutTemplate(DetailReserveTemplate(reserve!!))) {
+            }
+        }
+        delete("reserves/delete/{id}") {
+            val id = call.parameters["id"]!!
+            reserveDaoRepository.deleteItem(id.toInt())
+            call.respondText("Reserva borrada", status = HttpStatusCode.OK)
+        }
+
         //post neccesary to post the data from the input
         post("reserve-action_page") {
-            //val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
             var id: Int = -1
             var startTimeStamp: LocalDateTime = LocalDateTime.now()
             var endTimeStamp: LocalDateTime = LocalDateTime.now()
@@ -67,13 +79,9 @@ fun Route.reserveSportsRouting() {
                             "id" -> id = part.value.toInt()
                             "start" -> {
                                 startTimeStamp = formatter.formatToDateTime(part.value)
-                                /*val textDateTime = part.value.replace('T',' ')
-                                startTimeStamp = LocalDateTime.parse(textDateTime, formatter)*/
                             }
                             "end" -> {
                                 endTimeStamp = formatter.formatToDateTime(part.value)
-                                /*val textDateTime = part.value.replace('T',' ')
-                                endTimeStamp = LocalDateTime.parse(textDateTime, formatter)*/
                             }
                             "idRoom" -> idRoom = part.value.toInt()
                             "idUser" -> idUser = part.value.toInt()
@@ -89,8 +97,10 @@ fun Route.reserveSportsRouting() {
             }
 
             val reserve = Reserve(id, startTimeStamp.toString(), endTimeStamp.toString(), idRoom, idUser) //pass all parameters to create the new Reserve
-            reserveDaoRepository.addItem(reserve)
-            call.respondText("Reserva generada", status = HttpStatusCode.Created)
+            if (reserveDaoRepository.verifyReserve(reserve)) {
+                reserveDaoRepository.addItem(reserve)
+                call.respondText("Reserva generada", status = HttpStatusCode.Created)
+            }else call.respondText("No se puede reservar en el horario indicado", status = HttpStatusCode.NotAcceptable)
 
         }
 
@@ -105,7 +115,9 @@ fun Route.reserveSportsRouting() {
         get("detail/{id}") {
             val id = call.parameters["id"]!!
             val user = userDaoRepository.getItem(id.toInt())
-            call.respondHtmlTemplate(LayoutTemplate(DetailUserTemplate(user!!))) {
+            val reserves = reserveDaoRepository.getItemListByUser(id.toInt())
+            val reservesActives = reserveDaoRepository.getItemListActiveByUser(id.toInt())
+            call.respondHtmlTemplate(LayoutTemplate(DetailUserTemplate(user!!, reserves, reservesActives))) {
             }
         }
         get("add-user") {
@@ -142,7 +154,8 @@ fun Route.reserveSportsRouting() {
             call.respondText("Usuario creado", status = HttpStatusCode.Created)
 
         }
-        get("/uploads/{imageName}") {//thius get to see the image
+        //this get is to see the image
+        get("/uploads/{imageName}") {
             val imageName = call.parameters["imageName"]
             var file = File("./uploads/$imageName")
             if(file.exists()){
