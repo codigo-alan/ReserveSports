@@ -3,9 +3,11 @@ package com.example.routes
 import com.example.models.Formatter
 import com.example.models.reserve.Reserve
 import com.example.models.reserve.ReserveDaoRepository
+import com.example.models.reserve.ReserveInsertData
 import com.example.models.room.RoomDaoRepository
 import com.example.models.user.User
 import com.example.models.user.UserDaoRepository
+import com.example.models.user.UserInsertData
 import com.example.templates.*
 import com.example.templates.reserve.AddReserveTemplate
 import com.example.templates.reserve.DetailReserveTemplate
@@ -21,7 +23,6 @@ import io.ktor.server.html.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.jetbrains.exposed.dao.id.EntityID
 import java.io.File
 import java.time.LocalDateTime
 
@@ -53,10 +54,10 @@ fun Route.reserveSportsRouting() {
         }
 
         get("reserves/detail/{id}") {
-            val id = call.parameters["id"]!!
-            val reserve = reserveDaoRepository.getItem(id.toInt())
-            val userName = reserveDaoRepository.getUserName(id.toInt())
-            val roomName = reserveDaoRepository.getRoomName(id.toInt())
+            val id = call.parameters["id"]!!.toInt()
+            val reserve = reserveDaoRepository.getItem(id)
+            val userName = reserveDaoRepository.getUserName(id)
+            val roomName = reserveDaoRepository.getRoomName(id)
             call.respondHtmlTemplate(LayoutTemplate(DetailReserveTemplate(reserve!!, userName, roomName))) {
             }
         }
@@ -68,7 +69,7 @@ fun Route.reserveSportsRouting() {
 
         //post neccesary to post the data from the input
         post("reserve-action_page") {
-            var id: Int = -1
+            //var id: Int = -1
             var startTimeStamp: LocalDateTime = LocalDateTime.now()
             var endTimeStamp: LocalDateTime = LocalDateTime.now()
             var idRoom: Int = -1
@@ -79,7 +80,7 @@ fun Route.reserveSportsRouting() {
                 when (part) {
                     is PartData.FormItem -> {
                         when (part.name) {
-                            "id" -> id = part.value.toInt()
+                            //"id" -> id = part.value.toInt()
                             "start" -> {
                                 startTimeStamp = formatter.formatToDateTime(part.value)
                             }
@@ -99,7 +100,7 @@ fun Route.reserveSportsRouting() {
                 }
             }
 
-            val reserve = Reserve(id, startTimeStamp.toString(), endTimeStamp.toString(), idRoom, idUser) //pass all parameters to create the new Reserve
+            val reserve = ReserveInsertData(startTimeStamp.toString(), endTimeStamp.toString(), idRoom, idUser) //pass all parameters to create the new Reserve
             if (reserveDaoRepository.verifyReserve(reserve)) {
                 reserveDaoRepository.addItem(reserve)
                 call.respondText("Reserva generada", status = HttpStatusCode.Created)
@@ -129,7 +130,7 @@ fun Route.reserveSportsRouting() {
         }
         //post neccesary to post the data from the input
         post("user_action_page") {
-            var id: Int = 1
+            //var id: Int = 1
             var name: String = ""
             var fileName: String = ""
 
@@ -138,7 +139,7 @@ fun Route.reserveSportsRouting() {
                 when (part) {
                     is PartData.FormItem -> {
                         when (part.name) {
-                            "id" -> id = part.value.toInt()
+                            //"id" -> id = part.value.toInt()
                             "name" -> name = part.value
                         }
                     }
@@ -152,7 +153,7 @@ fun Route.reserveSportsRouting() {
 
             }
 
-            val user = User(id, name, fileName) //pass all parameters to create the new Reserve
+            val user = UserInsertData(name, fileName) //pass all parameters to create the new Reserve
             userDaoRepository.addItem(user)
             call.respondText("Usuario creado", status = HttpStatusCode.Created)
 

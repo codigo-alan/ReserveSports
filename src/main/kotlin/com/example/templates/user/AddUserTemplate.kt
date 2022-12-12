@@ -9,7 +9,7 @@ class AddUserTemplate(): Template<FlowContent> {
             method = FormMethod.post //this is the method to do
             action = "/users/user_action_page" //route of action
             encType= FormEncType.multipartFormData //neccesary to upload images
-            label {
+            /*label {
                 htmlFor = "id"
                 +"""Id:"""
             }
@@ -24,7 +24,7 @@ class AddUserTemplate(): Template<FlowContent> {
             br {
             }
             br {
-            }
+            }*/
             label {
                 htmlFor = "name"
                 +"""Nombre:"""

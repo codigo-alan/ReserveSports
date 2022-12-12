@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 
 class ReserveDaoRepository {
     private val formatter = Formatter()
-    fun verifyReserve(newReserve: Reserve): Boolean {
+    fun verifyReserve(newReserve: ReserveInsertData): Boolean {
         val startDateTime = formatter.formatToDateTime(newReserve.startDateTime)//formatToDateTime(newReserve.startDateTime)
         val endDateTime = formatter.formatToDateTime(newReserve.endDateTime)//formatToDateTime(newReserve.endDateTime)
         val listOfReserves = getItemList()
@@ -85,9 +85,9 @@ class ReserveDaoRepository {
         ReserveDaoTable.deleteWhere { ReserveDaoTable.id eq reserveId }
     }
 
-    fun addItem(newReserve: Reserve)= transaction {
+    fun addItem(newReserve: ReserveInsertData)= transaction {
         ReserveDaoTable.insert {
-            it[id] = newReserve.id
+            //it[id] = newReserve.id
             it[startDateTime] =
                 formatter.formatToDateTime(newReserve.startDateTime)//formatToDateTime(newReserve.startDateTime)
             it[endDateTime] =
@@ -98,8 +98,6 @@ class ReserveDaoRepository {
         }
     }
 
-    private fun queryToString(resultRow: ResultRow): String =
-        resultRow[UserDaoTable.name]
     private fun dbToModel(resultRow: ResultRow): Reserve =
         Reserve(resultRow[ReserveDaoTable.id], resultRow[ReserveDaoTable.startDateTime].toString(), resultRow[ReserveDaoTable.endDateTime].toString(),
             resultRow[ReserveDaoTable.idRoom], resultRow[ReserveDaoTable.idUser])

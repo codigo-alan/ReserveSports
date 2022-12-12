@@ -19,9 +19,9 @@ class UserDaoRepository () {
         UserDaoTable.select { UserDaoTable.id eq userId }.map(::dbToModel).firstOrNull()
     }
 
-    fun addItem(newUser: User) = transaction{
+    fun addItem(newUser: UserInsertData) = transaction{
         UserDaoTable.insert {
-            it[id] = newUser.id
+            //it[id] = newUser.id
             it[name] = newUser.name
             it[profileImg] = newUser.profileImg
         }

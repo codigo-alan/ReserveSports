@@ -9,7 +9,7 @@ class AddReserveTemplate(): Template<FlowContent> {
             method = FormMethod.post //this is the method to do
             action = "/sports/reserve-action_page" //route of action
             encType= FormEncType.multipartFormData //neccesary to upload images
-            label {
+            /*label {
                 htmlFor = "id"
                 +"""Id:"""
             }
@@ -22,7 +22,7 @@ class AddReserveTemplate(): Template<FlowContent> {
                 value = ""
             }
             br {
-            }
+            }*/
             label {
                 htmlFor = "start"
                 +"""Inicio:"""

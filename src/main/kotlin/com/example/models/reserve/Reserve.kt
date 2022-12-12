@@ -6,12 +6,11 @@ import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.javatime.datetime
 
 @Serializable
 data class Reserve(
-    val id: Int,
+    val id: @Contextual EntityID<Int>,
     var startDateTime: String,
     var endDateTime: String,
     var idRoom: Int,
@@ -25,11 +24,9 @@ data class ReserveInsertData(
     var idUser: Int
 )
 
-object ReserveDaoTable: Table() {
-    val id = integer("id")
+object ReserveDaoTable: IntIdTable() {
     var startDateTime = datetime("startTimestamp")
     var endDateTime = datetime("endTimestamp")
     var idRoom = integer("idRoom").references(RoomDaoTable.id)
     var idUser = integer("idUser").references(UserDaoTable.id)
-    override val primaryKey = PrimaryKey(id, name = "pk_reserve")
 }
