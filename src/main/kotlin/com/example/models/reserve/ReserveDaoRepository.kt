@@ -1,15 +1,16 @@
 package com.example.models.reserve
 
 import com.example.models.Formatter
+import com.example.models.room.RoomDaoTable
+import com.example.models.user.UserDaoTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class ReserveDaoRepository {
     private val formatter = Formatter()
-    fun verifyReserve(newReserve: Reserve): Boolean { //TODO not works properly
+    fun verifyReserve(newReserve: Reserve): Boolean {
         val startDateTime = formatter.formatToDateTime(newReserve.startDateTime)//formatToDateTime(newReserve.startDateTime)
         val endDateTime = formatter.formatToDateTime(newReserve.endDateTime)//formatToDateTime(newReserve.endDateTime)
         val listOfReserves = getItemList()
@@ -45,8 +46,9 @@ class ReserveDaoRepository {
     fun getItemListByRoom(idRoom: Int) = transaction {
         ReserveDaoTable.select{ ReserveDaoTable.idRoom eq idRoom }.map(::dbToModel)
     }
-    fun getItemListByUser(idUser: Int) = transaction {
-        ReserveDaoTable.select{ ReserveDaoTable.idUser eq idUser }.map(::dbToModel)
+    fun getItemListOldByUser(idUser: Int) = transaction {
+        ReserveDaoTable.select{ (ReserveDaoTable.idUser eq idUser) and
+                (ReserveDaoTable.endDateTime less LocalDateTime.now()) }.map(::dbToModel)
     }
     fun getItemListActiveByUser(idUser: Int) = transaction {
         ReserveDaoTable.select{
@@ -57,6 +59,26 @@ class ReserveDaoRepository {
     fun getItem(reserveId: Int) = transaction {
         ReserveDaoTable.select { ReserveDaoTable.id eq reserveId }.map(::dbToModel).firstOrNull()
     }
+
+    fun getItemWithUser(reserveId: Int) = transaction {
+        ReserveDaoTable.select { ReserveDaoTable.id eq reserveId }.map(::dbToModel).firstOrNull()
+    }
+
+    fun getUserName(reserveId: Int) = transaction {
+        (ReserveDaoTable innerJoin UserDaoTable)
+                .slice(UserDaoTable.name)
+                .select { (UserDaoTable.id eq ReserveDaoTable.idUser) and
+                        (ReserveDaoTable.id eq reserveId) }.first()[UserDaoTable.name]
+    }
+
+
+    fun getRoomName(reserveId: Int) = transaction {
+            (ReserveDaoTable innerJoin RoomDaoTable)
+                .slice(RoomDaoTable.name)
+                .select { (RoomDaoTable.id eq ReserveDaoTable.idRoom) and
+                        (ReserveDaoTable.id eq reserveId)  }.first()[RoomDaoTable.name]
+    }
+
 
     fun deleteItem(reserveId: Int) = transaction {
         println(reserveId)
@@ -76,6 +98,8 @@ class ReserveDaoRepository {
         }
     }
 
+    private fun queryToString(resultRow: ResultRow): String =
+        resultRow[UserDaoTable.name]
     private fun dbToModel(resultRow: ResultRow): Reserve =
         Reserve(resultRow[ReserveDaoTable.id], resultRow[ReserveDaoTable.startDateTime].toString(), resultRow[ReserveDaoTable.endDateTime].toString(),
             resultRow[ReserveDaoTable.idRoom], resultRow[ReserveDaoTable.idUser])

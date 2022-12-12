@@ -3,8 +3,9 @@ package com.example.templates.reserve
 import com.example.models.reserve.Reserve
 import io.ktor.server.html.*
 import kotlinx.html.*
+import org.jetbrains.exposed.sql.Query
 
-class DetailReserveTemplate(private val reserve: Reserve):
+class DetailReserveTemplate(private val reserve: Reserve, private val userName: String, private val roomName: String):
     Template<FlowContent> {
 
     override fun FlowContent.apply() {
@@ -15,17 +16,19 @@ class DetailReserveTemplate(private val reserve: Reserve):
             p { +"""Hora Fin: ${reserve?.endDateTime}""" }
             p { +"""Usuario asignado: ${reserve?.idRoom}""" } //TODO obtain these data in a join, to see the name, not id
             p { +"""Sala reservada: ${reserve?.idUser}""" } //TODO obtain these data in a join, to see the name, not id
+            p { +"""Sala reservada: $roomName""" }
+            p { +"""Usuario asignado: $userName""" }
+
         }
 
         div {
-            button {
-                onClick = "../delete/${reserve?.id}" //TODO create function to go to route to delete
-                a {
-                    href = "../delete/${reserve?.id}"//TODO not pass properly the url
-                    +"""CLICK to delete"""
+            a {
+                href = "../delete/${reserve?.id}"
+                button {
+                    +"""Borrar reserva"""
                 }
-                +"""Borrar reserva"""
             }
+
         }
 
     }

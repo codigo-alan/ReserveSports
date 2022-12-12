@@ -21,6 +21,7 @@ import io.ktor.server.html.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.jetbrains.exposed.dao.id.EntityID
 import java.io.File
 import java.time.LocalDateTime
 
@@ -54,10 +55,12 @@ fun Route.reserveSportsRouting() {
         get("reserves/detail/{id}") {
             val id = call.parameters["id"]!!
             val reserve = reserveDaoRepository.getItem(id.toInt())
-            call.respondHtmlTemplate(LayoutTemplate(DetailReserveTemplate(reserve!!))) {
+            val userName = reserveDaoRepository.getUserName(id.toInt())
+            val roomName = reserveDaoRepository.getRoomName(id.toInt())
+            call.respondHtmlTemplate(LayoutTemplate(DetailReserveTemplate(reserve!!, userName, roomName))) {
             }
         }
-        delete("reserves/delete/{id}") {
+        get("reserves/delete/{id}") {
             val id = call.parameters["id"]!!
             reserveDaoRepository.deleteItem(id.toInt())
             call.respondText("Reserva borrada", status = HttpStatusCode.OK)
@@ -115,7 +118,7 @@ fun Route.reserveSportsRouting() {
         get("detail/{id}") {
             val id = call.parameters["id"]!!
             val user = userDaoRepository.getItem(id.toInt())
-            val reserves = reserveDaoRepository.getItemListByUser(id.toInt())
+            val reserves = reserveDaoRepository.getItemListOldByUser(id.toInt())
             val reservesActives = reserveDaoRepository.getItemListActiveByUser(id.toInt())
             call.respondHtmlTemplate(LayoutTemplate(DetailUserTemplate(user!!, reserves, reservesActives))) {
             }

@@ -1,6 +1,6 @@
 package com.example.models.user
 
-import com.example.models.room.RoomDaoTable
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
