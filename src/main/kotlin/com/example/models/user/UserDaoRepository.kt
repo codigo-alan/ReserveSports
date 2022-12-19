@@ -1,9 +1,6 @@
 package com.example.models.user
 
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class UserDaoRepository () {
@@ -25,6 +22,18 @@ class UserDaoRepository () {
             it[name] = newUser.name
             it[profileImg] = newUser.profileImg
         }
+    }
+
+    fun findLastId() : Int {
+        transaction{
+
+            UserDaoTable
+                .slice(UserDaoTable.id.max())
+                .select { UserDaoTable.id eq UserDaoTable.id.max() }
+                .maxByOrNull { UserDaoTable.id }
+
+        }
+        return 1
     }
 
     private fun dbToModel(resultRow: ResultRow): User =

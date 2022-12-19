@@ -19,7 +19,7 @@ class AllRoomsTemplate(private val rooms: List<Room>): Template<FlowContent> {
                         td {//TODO not completed
                             img (classes = "tableImg"){
                                 id = "${it.id}"
-                                src = "/sports/uploads/${it.image}" //this is the source of the image, view GET in movie routes
+                                src = "static/uploads/${it.image}" //this is the source of the image, view GET in movie routes
                                 width = "50px"
                                 height = "50px"
                             }

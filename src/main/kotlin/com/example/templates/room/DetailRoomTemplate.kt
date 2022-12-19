@@ -21,7 +21,7 @@ class DetailRoomTemplate(private val room: Room, private val reserves: List<Rese
                     td {
                         img {
                             id = "imagenPrueba"
-                            src = "/static/files/logo.png"
+                            src = "static/uploads/${room.image}" //this is the source of the image, view GET in movie routes
                             width = "50px"
                             height = "50px"
                         }

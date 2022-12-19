@@ -103,10 +103,11 @@ fun Route.reserveSportsRouting() {
             val reserve = ReserveInsertData(startTimeStamp.toString(), endTimeStamp.toString(), idRoom, idUser) //pass all parameters to create the new Reserve
             if (reserveDaoRepository.verifyReserve(reserve)) {
                 reserveDaoRepository.addItem(reserve)
-                call.respondText("Reserva generada", status = HttpStatusCode.Created)
-            }else call.respondText("No se puede reservar en el horario indicado", status = HttpStatusCode.NotAcceptable)
+                call.respondRedirect("../users/detail/${idUser}")
+            }else call.respondRedirect("add-reserve")
 
         }
+
 
     }
     route("/users") {
@@ -153,9 +154,11 @@ fun Route.reserveSportsRouting() {
 
             }
 
-            val user = UserInsertData(name, fileName) //pass all parameters to create the new Reserve
+            val user = UserInsertData(name, fileName) //pass all parameters to create the new User
             userDaoRepository.addItem(user)
-            call.respondText("Usuario creado", status = HttpStatusCode.Created)
+            //val idNewUser = userDaoRepository.findLastId() //the function invoked give error
+            //call.respondRedirect("detail/${idNewUser}") //TODO not works
+            call.respondText("Usuario creado", status = HttpStatusCode.Accepted)
 
         }
         //this get is to see the image
