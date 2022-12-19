@@ -24,16 +24,10 @@ class UserDaoRepository () {
         }
     }
 
-    fun findLastId() : Int {
-        transaction{
+    fun findIdByName(name: String) = transaction {
 
-            UserDaoTable
-                .slice(UserDaoTable.id.max())
-                .select { UserDaoTable.id eq UserDaoTable.id.max() }
-                .maxByOrNull { UserDaoTable.id }
+        UserDaoTable.slice(UserDaoTable.id).select { UserDaoTable.name eq name }.last()[UserDaoTable.id]
 
-        }
-        return 1
     }
 
     private fun dbToModel(resultRow: ResultRow): User =

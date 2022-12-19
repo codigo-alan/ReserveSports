@@ -1,11 +1,9 @@
 package com.example.routes
 
 import com.example.models.Formatter
-import com.example.models.reserve.Reserve
 import com.example.models.reserve.ReserveDaoRepository
 import com.example.models.reserve.ReserveInsertData
 import com.example.models.room.RoomDaoRepository
-import com.example.models.user.User
 import com.example.models.user.UserDaoRepository
 import com.example.models.user.UserInsertData
 import com.example.templates.*
@@ -156,10 +154,9 @@ fun Route.reserveSportsRouting() {
 
             val user = UserInsertData(name, fileName) //pass all parameters to create the new User
             userDaoRepository.addItem(user)
-            //val idNewUser = userDaoRepository.findLastId() //the function invoked give error
-            //call.respondRedirect("detail/${idNewUser}") //TODO not works
-            call.respondText("Usuario creado", status = HttpStatusCode.Accepted)
-
+            val idNewUser = userDaoRepository.findIdByName(name)
+            //call.respondRedirect("all")
+            call.respondRedirect("detail/${idNewUser}")
         }
         //this get is to see the image
         get("/uploads/{imageName}") {
