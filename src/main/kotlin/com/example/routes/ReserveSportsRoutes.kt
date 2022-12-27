@@ -47,7 +47,9 @@ fun Route.reserveSportsRouting() {
         }
 
         get("add-reserve") {
-            call.respondHtmlTemplate(LayoutTemplate(AddReserveTemplate())) {
+            val listUsers = userDaoRepository.getItemList()
+            val listRooms = roomDaoRepository.getItemList()
+            call.respondHtmlTemplate(LayoutTemplate(AddReserveTemplate(listUsers,listRooms))) {
             }
         }
 
@@ -62,7 +64,8 @@ fun Route.reserveSportsRouting() {
         get("reserves/delete/{id}") {
             val id = call.parameters["id"]!!
             reserveDaoRepository.deleteItem(id.toInt())
-            call.respondText("Reserva borrada", status = HttpStatusCode.OK)
+            //call.respondText("Reserva borrada", status = HttpStatusCode.OK)
+            call.respondRedirect("../../../users/all")
         }
 
         //post neccesary to post the data from the input

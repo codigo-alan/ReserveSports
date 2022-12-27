@@ -1,9 +1,11 @@
 package com.example.templates.reserve
 
+import com.example.models.room.Room
+import com.example.models.user.User
 import io.ktor.server.html.*
 import kotlinx.html.*
 
-class AddReserveTemplate(): Template<FlowContent> {
+class AddReserveTemplate(private val listUsers: List<User>, private val listRooms: List<Room>): Template<FlowContent> {
     override fun FlowContent.apply() {
         form {
             method = FormMethod.post //this is the method to do
@@ -55,7 +57,7 @@ class AddReserveTemplate(): Template<FlowContent> {
             }
             br {
             }
-            label {
+            /*label {
                 htmlFor = "idRoom"
                 +"""Id Room:"""
             }
@@ -87,7 +89,50 @@ class AddReserveTemplate(): Template<FlowContent> {
             br {
             }
             br {
+            }*/
+
+            label {
+                htmlFor = "idUser"
+                +"""Usuario:"""
             }
+            select {
+                name = "idUser"
+                id = "idUser"
+                listUsers.forEach {
+                    option {
+                        value = "${it.id}"
+                        +"""${it.name}"""
+                    }
+                }
+
+            }
+
+            br {
+            }
+            br {
+            }
+
+            label {
+                htmlFor = "idRoom"
+                +"""Sala:"""
+            }
+            select {
+                name = "idRoom"
+                id = "idRoom"
+                listRooms.forEach {
+                    option {
+                        value = "${it.id}"
+                        +"""${it.name}"""
+                    }
+                }
+
+            }
+
+            br {
+            }
+            br {
+            }
+
             input {
                 type = InputType.submit
                 value = "Submit"

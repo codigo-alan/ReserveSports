@@ -81,7 +81,6 @@ class ReserveDaoRepository {
 
 
     fun deleteItem(reserveId: Int) = transaction {
-        println(reserveId)
         ReserveDaoTable.deleteWhere { ReserveDaoTable.id eq reserveId }
     }
 

@@ -1,13 +1,11 @@
 package com.example.models.user
 
+import com.example.interfaces.Repository
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class UserDaoRepository () {
+class UserDaoRepository() {
 
-    fun getOwnReserves() {
-        //TODO NOT IMPLEMENTED yet
-    }
     fun getItemList() = transaction {
         UserDaoTable.selectAll().map(::dbToModel)
     }
@@ -32,4 +30,5 @@ class UserDaoRepository () {
 
     private fun dbToModel(resultRow: ResultRow): User =
         User(resultRow[UserDaoTable.id], resultRow[UserDaoTable.name], resultRow[UserDaoTable.profileImg])
+
 }
