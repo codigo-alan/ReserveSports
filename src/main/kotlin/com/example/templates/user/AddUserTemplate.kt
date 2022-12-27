@@ -7,24 +7,9 @@ class AddUserTemplate(): Template<FlowContent> {
     override fun FlowContent.apply() {
         form {
             method = FormMethod.post //this is the method to do
-            action = "/users/user_action_page" //route of action
+            action = "/reserve-sports/user-action-page" //route of action
             encType= FormEncType.multipartFormData //neccesary to upload images
-            /*label {
-                htmlFor = "id"
-                +"""Id:"""
-            }
-            br {
-            }
-            input {
-                type = InputType.number
-                id = "id"
-                name = "id"
-                value = ""
-            }
-            br {
-            }
-            br {
-            }*/
+
             label {
                 htmlFor = "name"
                 +"""Nombre:"""

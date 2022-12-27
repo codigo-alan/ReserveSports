@@ -27,7 +27,7 @@ class AllRoomsTemplate(private val rooms: List<Room>): Template<FlowContent> {
                         td { +"""${it.name}""" }
                         td {
                             a {
-                                href = "detail/${it.id}"
+                                href = "rooms/${it.id}"
                                 +"""Ver detalle"""
                             }
                         }

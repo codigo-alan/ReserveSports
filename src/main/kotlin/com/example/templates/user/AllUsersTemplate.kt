@@ -18,7 +18,7 @@ class AllUsersTemplate(private val users: List<User>): Template<FlowContent> {
                         td {//TODO not completed
                             img (classes = "tableImg"){
                                 id = "${it.id}"
-                                src = "/users/uploads/${it.profileImg}" //this is the source of the image, view GET in movie routes
+                                src = "/reserve-sports/uploads/${it.profileImg}" //this is the source of the image, view GET in movie routes
                                 width = "50px"
                                 height = "50px"
                             }
@@ -26,7 +26,7 @@ class AllUsersTemplate(private val users: List<User>): Template<FlowContent> {
                         td { +"""${it.name}""" }
                         td {
                             a {
-                                href = "detail/${it.id}"
+                                href = "users/${it.id}"
                                 +"""Ver usuario"""
                             }
                         }

@@ -9,22 +9,8 @@ class AddReserveTemplate(private val listUsers: List<User>, private val listRoom
     override fun FlowContent.apply() {
         form {
             method = FormMethod.post //this is the method to do
-            action = "/sports/reserve-action_page" //route of action
+            action = "/reserve-sports/reserve-action-page" //route of action
             encType= FormEncType.multipartFormData //neccesary to upload images
-            /*label {
-                htmlFor = "id"
-                +"""Id:"""
-            }
-            br {
-            }
-            input {
-                type = InputType.number
-                id = "id"
-                name = "id"
-                value = ""
-            }
-            br {
-            }*/
             label {
                 htmlFor = "start"
                 +"""Inicio:"""
@@ -57,39 +43,6 @@ class AddReserveTemplate(private val listUsers: List<User>, private val listRoom
             }
             br {
             }
-            /*label {
-                htmlFor = "idRoom"
-                +"""Id Room:"""
-            }
-            br {
-            }
-            input {
-                type = InputType.number
-                id = "idRoom"
-                name = "idRoom"
-                value = ""
-            }
-            br {
-            }
-            br {
-            }
-            label {
-                htmlFor = "idUser"
-                +"""Id User:"""
-            }
-            br {
-            }
-            input {
-                type = InputType.number
-                id = "idUser"
-                name = "idUser"
-                value = ""
-            }
-
-            br {
-            }
-            br {
-            }*/
 
             label {
                 htmlFor = "idUser"

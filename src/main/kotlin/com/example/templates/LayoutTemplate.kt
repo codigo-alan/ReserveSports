@@ -29,31 +29,31 @@ class LayoutTemplate<T : Template<FlowContent>>(private val template: T): Templa
                 ul {
                     li {
                         a {
-                            href = "/sports/all"
+                            href = "/reserve-sports/rooms"
                             +"""Listado de salas"""
                         }
                     }
                     li {
                         a {
-                            href = "/sports/add-reserve"
+                            href = "/reserve-sports/reserve/new"
                             +"""Nueva reserva"""
                         }
                     }
-                    li {
+                    /*li {
                         a {
                             href = "/users/detail" //TODO not implemented
                             +"""Info usuario"""
                         }
-                    }
+                    }*/
                     li {
                         a {
-                            href = "/users/add-user"
+                            href = "/reserve-sports/users/new"
                             +"""Nuevo usuario"""
                         }
                     }
                     li {
                         a {
-                            href = "/users/all"
+                            href = "/reserve-sports/users"
                             +"""Usuarios"""
                         }
                     }
