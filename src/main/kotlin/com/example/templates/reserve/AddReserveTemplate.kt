@@ -88,7 +88,7 @@ class AddReserveTemplate(private val listUsers: List<User>, private val listRoom
 
             input {
                 type = InputType.submit
-                value = "Submit"
+                value = "Reservar"
             }
         }
 

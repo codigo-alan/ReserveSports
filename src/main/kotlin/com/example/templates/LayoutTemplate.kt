@@ -35,7 +35,7 @@ class LayoutTemplate<T : Template<FlowContent>>(private val template: T): Templa
                     }
                     li {
                         a {
-                            href = "/reserve-sports/reserve/new"
+                            href = "/reserve-sports/reserves/new"
                             +"""Nueva reserva"""
                         }
                     }

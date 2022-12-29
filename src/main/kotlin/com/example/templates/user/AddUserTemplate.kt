@@ -44,7 +44,7 @@ class AddUserTemplate(): Template<FlowContent> {
             }
             input {
                 type = InputType.submit
-                value = "Submit"
+                value = "Crear"
             }
         }
     }

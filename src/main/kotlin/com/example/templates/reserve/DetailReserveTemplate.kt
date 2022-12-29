@@ -14,8 +14,6 @@ class DetailReserveTemplate(private val reserve: Reserve, private val userName: 
             p { +"""Nro de reserva: ${reserve?.id}""" }
             p { +"""Hora Inicio: ${reserve?.startDateTime}""" }
             p { +"""Hora Fin: ${reserve?.endDateTime}""" }
-            p { +"""Usuario asignado: ${reserve?.idRoom}""" } //TODO obtain these data in a join, to see the name, not id
-            p { +"""Sala reservada: ${reserve?.idUser}""" } //TODO obtain these data in a join, to see the name, not id
             p { +"""Sala reservada: $roomName""" }
             p { +"""Usuario asignado: $userName""" }
 
@@ -23,7 +21,7 @@ class DetailReserveTemplate(private val reserve: Reserve, private val userName: 
 
         div {
             a {
-                href = "../delete/${reserve?.id}"
+                href = "../reserves/delete/${reserve?.id}"
                 button {
                     +"""Borrar reserva"""
                 }
