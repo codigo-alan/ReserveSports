@@ -15,7 +15,7 @@ class AllUsersTemplate(private val users: List<User>): Template<FlowContent> {
                 }
                 users.forEach {
                     tr {
-                        td {//TODO not completed
+                        td {
                             img (classes = "tableImg"){
                                 id = "${it.id}"
                                 src = "/reserve-sports/uploads/${it.profileImg}" //this is the source of the image, view GET in movie routes

@@ -162,6 +162,13 @@ fun Route.reserveSportsRouting() {
             else call.respondText("Image not found", status = HttpStatusCode.NotFound)
         }
 
+        get("/files/{imageName}") {
+            val imageName = call.parameters["imageName"]
+            var file = File("./uploads/$imageName")
+            if(file.exists()) call.respondFile(File("./uploads/$imageName"))
+            else call.respondText("Image not found", status = HttpStatusCode.NotFound)
+        }
+
 
     }
 
