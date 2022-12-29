@@ -26,7 +26,7 @@ class DetailUserTemplate(private val user: User, private val reserves: List<Rese
                     tr {
                         td {
                             a {
-                                href = "../../sports/reserves/detail/${it.id}"
+                                href = "../../reserve-sports/reserves/${it.id}"
                                 +"""${it?.id}"""
                             }
                         }
@@ -49,7 +49,7 @@ class DetailUserTemplate(private val user: User, private val reserves: List<Rese
                     tr {
                         td {
                             a {
-                                href = "../../sports/reserves/detail/${it.id}"
+                                href = "../../reserve-sports/reserves/${it.id}"
                                 +"""${it?.id}"""
                             }
                         }

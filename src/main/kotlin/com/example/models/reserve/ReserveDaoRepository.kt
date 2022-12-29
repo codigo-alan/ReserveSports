@@ -60,8 +60,8 @@ class ReserveDaoRepository {
         ReserveDaoTable.select { ReserveDaoTable.id eq reserveId }.map(::dbToModel).firstOrNull()
     }
 
-    fun getItemWithUser(reserveId: Int) = transaction {
-        ReserveDaoTable.select { ReserveDaoTable.id eq reserveId }.map(::dbToModel).firstOrNull()
+    fun getUserFromReserve(reserveId: Int) = transaction {
+        ReserveDaoTable.slice(ReserveDaoTable.idUser).select { ReserveDaoTable.id eq reserveId }.first()[ReserveDaoTable.idUser]
     }
 
     fun getUserName(reserveId: Int) = transaction {
@@ -81,7 +81,6 @@ class ReserveDaoRepository {
 
 
     fun deleteItem(reserveId: Int) = transaction {
-        println(reserveId)
         ReserveDaoTable.deleteWhere { ReserveDaoTable.id eq reserveId }
     }
 

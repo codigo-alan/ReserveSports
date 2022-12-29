@@ -1,11 +1,9 @@
 package com.example.routes
 
 import com.example.models.Formatter
-import com.example.models.reserve.Reserve
 import com.example.models.reserve.ReserveDaoRepository
 import com.example.models.reserve.ReserveInsertData
 import com.example.models.room.RoomDaoRepository
-import com.example.models.user.User
 import com.example.models.user.UserDaoRepository
 import com.example.models.user.UserInsertData
 import com.example.templates.*
@@ -33,14 +31,14 @@ fun Route.reserveSportsRouting() {
     val reserveDaoRepository = ReserveDaoRepository()
     val formatter = Formatter()
 
-    route("/sports") {
+    route("/reserve-sports") {
 
-        get("all") {
+        get("rooms") {
             val listRooms = roomDaoRepository.getItemList()
             call.respondHtmlTemplate(LayoutTemplate(AllRoomsTemplate(listRooms))) {
             }
         }
-        get("detail/{id}") {
+        get("rooms/{id}") {
             val id = call.parameters["id"]!!
             val room = roomDaoRepository.getItem(id.toInt())
             val reserves = reserveDaoRepository.getItemListByRoom(id.toInt())
@@ -48,12 +46,14 @@ fun Route.reserveSportsRouting() {
             }
         }
 
-        get("add-reserve") {
-            call.respondHtmlTemplate(LayoutTemplate(AddReserveTemplate())) {
+        get("reserves/new") {
+            val listUsers = userDaoRepository.getItemList()
+            val listRooms = roomDaoRepository.getItemList()
+            call.respondHtmlTemplate(LayoutTemplate(AddReserveTemplate(listUsers,listRooms))) {
             }
         }
 
-        get("reserves/detail/{id}") {
+        get("reserves/{id}") {
             val id = call.parameters["id"]!!.toInt()
             val reserve = reserveDaoRepository.getItem(id)
             val userName = reserveDaoRepository.getUserName(id)
@@ -63,13 +63,14 @@ fun Route.reserveSportsRouting() {
         }
         get("reserves/delete/{id}") {
             val id = call.parameters["id"]!!
+            //val idUser = reserveDaoRepository.getItem(id.toInt())!!.idUser
+            val idUser = reserveDaoRepository.getUserFromReserve(id.toInt())
             reserveDaoRepository.deleteItem(id.toInt())
-            call.respondText("Reserva borrada", status = HttpStatusCode.OK)
+            call.respondRedirect("../../users/$idUser")
         }
 
         //post neccesary to post the data from the input
-        post("reserve-action_page") {
-            //var id: Int = -1
+        post("reserve-action-page") {
             var startTimeStamp: LocalDateTime = LocalDateTime.now()
             var endTimeStamp: LocalDateTime = LocalDateTime.now()
             var idRoom: Int = -1
@@ -80,7 +81,6 @@ fun Route.reserveSportsRouting() {
                 when (part) {
                     is PartData.FormItem -> {
                         when (part.name) {
-                            //"id" -> id = part.value.toInt()
                             "start" -> {
                                 startTimeStamp = formatter.formatToDateTime(part.value)
                             }
@@ -103,20 +103,17 @@ fun Route.reserveSportsRouting() {
             val reserve = ReserveInsertData(startTimeStamp.toString(), endTimeStamp.toString(), idRoom, idUser) //pass all parameters to create the new Reserve
             if (reserveDaoRepository.verifyReserve(reserve)) {
                 reserveDaoRepository.addItem(reserve)
-                call.respondText("Reserva generada", status = HttpStatusCode.Created)
-            }else call.respondText("No se puede reservar en el horario indicado", status = HttpStatusCode.NotAcceptable)
+                call.respondRedirect("../users/${idUser}")
+            }else call.respondRedirect("reserves/new")
 
         }
 
-    }
-    route("/users") {
-
-        get("all") {
+        get("users") {
             val listUsers = userDaoRepository.getItemList()
             call.respondHtmlTemplate(LayoutTemplate(AllUsersTemplate(listUsers))) {
             }
         }
-        get("detail/{id}") {
+        get("users/{id}") {
             val id = call.parameters["id"]!!
             val user = userDaoRepository.getItem(id.toInt())
             val reserves = reserveDaoRepository.getItemListOldByUser(id.toInt())
@@ -124,12 +121,12 @@ fun Route.reserveSportsRouting() {
             call.respondHtmlTemplate(LayoutTemplate(DetailUserTemplate(user!!, reserves, reservesActives))) {
             }
         }
-        get("add-user") {
+        get("users/new") {
             call.respondHtmlTemplate(LayoutTemplate(AddUserTemplate())) {
             }
         }
         //post neccesary to post the data from the input
-        post("user_action_page") {
+        post("user-action-page") {
             //var id: Int = 1
             var name: String = ""
             var fileName: String = ""
@@ -139,7 +136,6 @@ fun Route.reserveSportsRouting() {
                 when (part) {
                     is PartData.FormItem -> {
                         when (part.name) {
-                            //"id" -> id = part.value.toInt()
                             "name" -> name = part.value
                         }
                     }
@@ -153,23 +149,21 @@ fun Route.reserveSportsRouting() {
 
             }
 
-            val user = UserInsertData(name, fileName) //pass all parameters to create the new Reserve
+            val user = UserInsertData(name, fileName) //pass all parameters to create the new User
             userDaoRepository.addItem(user)
-            call.respondText("Usuario creado", status = HttpStatusCode.Created)
-
+            val idNewUser = userDaoRepository.findIdByName(name)
+            call.respondRedirect("users/${idNewUser}")
         }
         //this get is to see the image
         get("/uploads/{imageName}") {
             val imageName = call.parameters["imageName"]
             var file = File("./uploads/$imageName")
-            if(file.exists()){
-                call.respondFile(File("./uploads/$imageName"))
-            }
-            else{
-                call.respondText("Image not found", status = HttpStatusCode.NotFound)
-            }
+            if(file.exists()) call.respondFile(File("./uploads/$imageName"))
+            else call.respondText("Image not found", status = HttpStatusCode.NotFound)
         }
 
+
     }
+
 
 }

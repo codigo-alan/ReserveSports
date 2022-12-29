@@ -1,16 +1,11 @@
 package com.example.models.user
 
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
+import com.example.interfaces.Repository
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class UserDaoRepository () {
+class UserDaoRepository() {
 
-    fun getOwnReserves() {
-        //TODO NOT IMPLEMENTED yet
-    }
     fun getItemList() = transaction {
         UserDaoTable.selectAll().map(::dbToModel)
     }
@@ -27,6 +22,13 @@ class UserDaoRepository () {
         }
     }
 
+    fun findIdByName(name: String) = transaction {
+
+        UserDaoTable.slice(UserDaoTable.id).select { UserDaoTable.name eq name }.last()[UserDaoTable.id]
+
+    }
+
     private fun dbToModel(resultRow: ResultRow): User =
         User(resultRow[UserDaoTable.id], resultRow[UserDaoTable.name], resultRow[UserDaoTable.profileImg])
+
 }
