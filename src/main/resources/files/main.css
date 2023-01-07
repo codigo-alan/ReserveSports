@@ -46,3 +46,8 @@ table, th, td {
 h3 {
     width: fit-content;
 }
+
+.room {
+    display: flex;
+    justify-content: space-between;
+}

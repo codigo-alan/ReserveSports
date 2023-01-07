@@ -16,10 +16,10 @@ class AllRoomsTemplate(private val rooms: List<Room>): Template<FlowContent> {
                 }
                 rooms.forEach {
                     tr {
-                        td {//TODO not completed
+                        td {
                             img (classes = "tableImg"){
                                 id = "${it.id}"
-                                src = "/reserve-sports/files/${it.image}" //this is the source of the image, view GET in movie routes
+                                src = "/static/${it.image}"
                                 width = "50px"
                                 height = "50px"
                             }

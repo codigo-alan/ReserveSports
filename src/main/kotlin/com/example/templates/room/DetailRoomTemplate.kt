@@ -21,7 +21,7 @@ class DetailRoomTemplate(private val room: Room, private val reserves: List<Rese
                     td {
                         img {
                             id = "imagenPrueba"
-                            src = "static/uploads/${room.image}" //this is the source of the image, view GET in movie routes
+                            src = "/static/${room.image}"
                             width = "50px"
                             height = "50px"
                         }
@@ -31,6 +31,16 @@ class DetailRoomTemplate(private val room: Room, private val reserves: List<Rese
                 }
 
             }
+            /*h3 { +"${room.name.uppercase()}" }
+            div("room") {
+                p { +"${room.description}" }
+                img {
+                    id = "imagenPrueba"
+                    src = "/static/${room.image}"
+                    width = "50px"
+                    height = "50px"
+                }
+            }*/
 
         }
         div("detail") {
