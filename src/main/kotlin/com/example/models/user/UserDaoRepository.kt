@@ -1,7 +1,9 @@
 package com.example.models.user
 
-import com.example.interfaces.Repository
+
+import com.example.models.reserve.ReserveDaoTable
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class UserDaoRepository() {
@@ -26,6 +28,11 @@ class UserDaoRepository() {
 
         UserDaoTable.slice(UserDaoTable.id).select { UserDaoTable.name eq name }.last()[UserDaoTable.id]
 
+    }
+
+    fun deleteItem(userId: Int) = transaction {
+        ReserveDaoTable.deleteWhere { ReserveDaoTable.idUser eq userId }
+        UserDaoTable.deleteWhere { UserDaoTable.id eq userId }
     }
 
     private fun dbToModel(resultRow: ResultRow): User =

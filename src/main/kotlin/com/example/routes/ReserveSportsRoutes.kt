@@ -103,7 +103,7 @@ fun Route.reserveSportsRouting() {
             val reserve = ReserveInsertData(startTimeStamp.toString(), endTimeStamp.toString(), idRoom, idUser) //pass all parameters to create the new Reserve
             if (reserveDaoRepository.verifyReserve(reserve)) {
                 reserveDaoRepository.addItem(reserve)
-                call.respondRedirect("../users/${idUser}")
+                call.respondRedirect("users/${idUser}")
             }else call.respondRedirect("reserves/new")
 
         }
@@ -121,13 +121,19 @@ fun Route.reserveSportsRouting() {
             call.respondHtmlTemplate(LayoutTemplate(DetailUserTemplate(user!!, reserves, reservesActives))) {
             }
         }
+
+        get("users/delete/{id}") {
+            val id = call.parameters["id"]!!
+            userDaoRepository.deleteItem(id.toInt())
+            call.respondRedirect("../../users")
+        }
+
         get("users/new") {
             call.respondHtmlTemplate(LayoutTemplate(AddUserTemplate())) {
             }
         }
         //post neccesary to post the data from the input
         post("user-action-page") {
-            //var id: Int = 1
             var name: String = ""
             var fileName: String = ""
 
@@ -162,12 +168,12 @@ fun Route.reserveSportsRouting() {
             else call.respondText("Image not found", status = HttpStatusCode.NotFound)
         }
 
-        get("/files/{imageName}") {
+        /*get("/files/{imageName}") {
             val imageName = call.parameters["imageName"]
             var file = File("./uploads/$imageName")
             if(file.exists()) call.respondFile(File("./uploads/$imageName"))
             else call.respondText("Image not found", status = HttpStatusCode.NotFound)
-        }
+        }*/
 
 
     }

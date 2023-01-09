@@ -12,6 +12,15 @@ class DetailUserTemplate(private val user: User, private val reserves: List<Rese
         div("detail") {
             p { +"""ID de usuario: ${user?.id}""" }
             p { +"""Nombre de usuario: ${user?.name}""" }
+            div {
+                a {
+                    href = "../users/delete/${user.id}"
+                    button {
+                        +"""Dar de baja este usuario"""
+                    }
+                }
+
+            }
         }
         div("detail") {
             h3 { +"Reservas en curso" }
