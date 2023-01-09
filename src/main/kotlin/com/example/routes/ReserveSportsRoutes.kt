@@ -4,11 +4,13 @@ import com.example.models.Formatter
 import com.example.models.reserve.ReserveDaoRepository
 import com.example.models.reserve.ReserveInsertData
 import com.example.models.room.RoomDaoRepository
+import com.example.models.room.RoomInsertData
 import com.example.models.user.UserDaoRepository
 import com.example.models.user.UserInsertData
 import com.example.templates.*
 import com.example.templates.reserve.AddReserveTemplate
 import com.example.templates.reserve.DetailReserveTemplate
+import com.example.templates.room.AddRoomTemplate
 import com.example.templates.room.AllRoomsTemplate
 import com.example.templates.room.DetailRoomTemplate
 import com.example.templates.user.AddUserTemplate
@@ -45,6 +47,42 @@ fun Route.reserveSportsRouting() {
             call.respondHtmlTemplate(LayoutTemplate(DetailRoomTemplate(room!!, reserves))) {
             }
         }
+
+        get("rooms/new") {
+            call.respondHtmlTemplate(LayoutTemplate(AddRoomTemplate())) {
+            }
+        }
+
+        post("room-action-page") {
+            var name: String = ""
+            var description: String = ""
+            var fileName: String = ""
+
+            val data = call.receiveMultipart()
+            data.forEachPart { part ->
+                when (part) {
+                    is PartData.FormItem -> {
+                        when (part.name) {
+                            "name" -> name = part.value
+                            "description" -> description = part.value
+                        }
+                    }
+                    is PartData.FileItem -> {
+                        fileName = part.originalFileName as String
+                        var fileBytes = part.streamProvider().readBytes()
+                        File("uploads/$fileName").writeBytes(fileBytes) //create a File in the route that I want
+                    }
+                    else -> {}
+                }
+
+            }
+
+            val room = RoomInsertData(name, description, fileName) //pass all parameters to create the new User
+            roomDaoRepository.addItem(room)
+            //val idNewUser = userDaoRepository.findIdByName(name)
+            call.respondRedirect("rooms")
+        }
+
 
         get("reserves/new") {
             val listUsers = userDaoRepository.getItemList()
