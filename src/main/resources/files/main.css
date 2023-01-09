@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Exo:400,700');
 
+
+
 body {
     width: 95%;
     margin: auto;
@@ -161,7 +163,7 @@ Aqui añado el fondo de animation
 }
 
 
-@keyframes animate {
+/*@keyframes animate {
 
     0%{
         transform: translateY(0) rotate(0deg);
@@ -175,7 +177,7 @@ Aqui añado el fondo de animation
         border-radius: 100%;
     }
 
-}
+}*/
 
 /**
 aqui se acaba el fondo de animation
@@ -251,3 +253,58 @@ html{
     background-color: #ff8a80;
 
 }
+
+body {
+    width: 90%;
+    margin: auto;
+    font-family: Calibri;
+}
+header {
+    display: flex;
+    justify-content: center;
+    margin: 1%;
+}
+header div {
+    display: block;
+}
+nav {
+    background-color: #4dabf5;
+    margin: auto;
+    height: 3rem;
+    display: flex;
+    justify-content: center;
+}
+
+ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    text-decoration: none;
+    width: 100%;
+}
+li {
+    margin: auto;
+}
+li a {
+    text-decoration: none;
+    color: #000000;
+    font-weight: bold;
+}
+
+li a:hover {
+    text-decoration: underline white;
+    color: white;
+}
+
+table, th, td {
+    border:1px solid black;
+}
+h3 {
+    width: fit-content;
+}
+
+.room {
+    display: flex;
+    justify-content: space-between;
+}
+
