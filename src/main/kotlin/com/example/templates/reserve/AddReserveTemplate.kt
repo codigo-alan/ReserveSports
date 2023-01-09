@@ -1,4 +1,4 @@
-package com.example.templates
+package com.example.templates.reserve
 
 import io.ktor.server.html.*
 import kotlinx.html.*
@@ -9,7 +9,7 @@ class AddReserveTemplate(): Template<FlowContent> {
             method = FormMethod.post //this is the method to do
             action = "/sports/reserve-action_page" //route of action
             encType= FormEncType.multipartFormData //neccesary to upload images
-            label {
+            /*label {
                 htmlFor = "id"
                 +"""Id:"""
             }
@@ -22,7 +22,7 @@ class AddReserveTemplate(): Template<FlowContent> {
                 value = ""
             }
             br {
-            }
+            }*/
             label {
                 htmlFor = "start"
                 +"""Inicio:"""
@@ -30,7 +30,7 @@ class AddReserveTemplate(): Template<FlowContent> {
             br {
             }
             input {
-                type = InputType.text
+                type = InputType.dateTimeLocal
                 id = "start"
                 name = "start"
                 value = ""
@@ -46,7 +46,7 @@ class AddReserveTemplate(): Template<FlowContent> {
             br {
             }
             input {
-                type = InputType.text
+                type = InputType.dateTimeLocal
                 id = "end"
                 name = "end"
                 value = ""

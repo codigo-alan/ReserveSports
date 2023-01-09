@@ -1,19 +1,16 @@
 package com.example.models.user
 
-import com.example.models.room.RoomDaoTable
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.Table
 
 @Serializable
-data class User(val id: Int, var name: String)
+data class User(val id: @Contextual EntityID<Int>, var name: String, var profileImg: String)
 
-@Serializable
-data class UserInsertData(var name: String)
+data class UserInsertData(var name: String, var profileImg: String)
 
-object UserDaoTable: Table(){
-    val id = integer("id").autoIncrement()
+object UserDaoTable: IntIdTable(){
     var name = varchar("name", 50)
-    override val primaryKey: PrimaryKey = PrimaryKey(UserDaoTable.id, name = "pk_user")
+    var profileImg = varchar("profileImg", 150)
 }
