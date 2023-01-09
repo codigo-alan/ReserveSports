@@ -1,22 +1,41 @@
+@import url('https://fonts.googleapis.com/css?family=Exo:400,700');
+
 body {
     width: 95%;
     margin: auto;
-    font-family: Calibri;
+    font-family: Calibri, serif ;
+    font-size: 18px;
+    line-height: 1.8;
+    overflow: hidden;
+    color: #3F4040;
 }
+/**
+Este header ya esta puesto en el div esta en el css area.
 header {
     display: flex;
     justify-content: center;
     margin: 1%;
-}
+    background-color: aquamarine;
+    border-radius: 90px;}
+*/
+
+
+
+
+
 header div {
     display: block;
+    color: aliceblue;
 }
 nav {
     background-color: #4dabf5;
     margin: auto;
-    height: 3rem;
+    height: 4rem;
     display: flex;
     justify-content: center;
+    color: #bfff00;
+    border-radius: 30px;
+
 }
 
 ul {
@@ -25,14 +44,155 @@ ul {
     list-style: none;
     text-decoration: none;
     width: 100%;
+    color: darkkhaki;
 }
+
+/**
+Aqui añado el fondo de animation
+ */
+
+.area{
+    background: aquamarine;
+  /** background: -webkit-linear-gradient(to left, #8f94fb, #4e54c8);*/
+    width: 100%;
+    height:100%;
+    display: flex;
+    justify-content: center;
+    margin: 0.5%;
+    border-radius: 60px;
+
+}
+
+.circles{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.circles li{
+    position: absolute;
+    display: block;
+    list-style: none;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    animation: animate 25s linear infinite;
+    bottom: -150px;
+
+}
+
+.circles li:nth-child(1){
+    left: 25%;
+    width: 80px;
+    height: 80px;
+    animation-delay: 0s;
+}
+
+
+.circles li:nth-child(2){
+    left: 10%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 2s;
+    animation-duration: 12s;
+}
+
+.circles li:nth-child(3){
+    left: 70%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 4s;
+}
+
+.circles li:nth-child(4){
+    left: 40%;
+    width: 60px;
+    height: 60px;
+    animation-delay: 0s;
+    animation-duration: 18s;
+}
+
+.circles li:nth-child(5){
+    left: 65%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 0s;
+}
+
+.circles li:nth-child(6){
+    left: 75%;
+    width: 110px;
+    height: 110px;
+    animation-delay: 3s;
+}
+
+.circles li:nth-child(7){
+    left: 25%;
+    width: 150px;
+    height: 150px;
+    animation-delay: 7s;
+}
+
+.circles li:nth-child(8){
+    left: 50%;
+    width: 25px;
+    height: 25px;
+    animation-delay: 15s;
+    animation-duration: 45s;
+}
+
+.circles li:nth-child(9){
+    left: 20%;
+    width: 15px;
+    height: 15px;
+    animation-delay: 2s;
+    animation-duration: 25s;
+}
+
+.circles li:nth-child(10){
+    left: 85%;
+    width: 150px;
+    height: 150px;
+    animation-delay: 0s;
+    animation-duration: 11s;
+}
+
+
+@keyframes animate {
+
+    0%{
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+        border-radius: 0;
+    }
+
+    100%{
+        transform: translateY(-1000px) rotate(720deg);
+        opacity: 10;
+        border-radius: 100%;
+    }
+
+}
+
+/**
+aqui se acaba el fondo de animation
+ */
+
+
 li {
     margin: auto;
 }
 li a {
-    text-decoration: none;
-    color: #000000;
+    text-decoration: underline;
+    color: #bfff00;
     font-weight: bold;
+    font-style: oblique 20deg;
+    font-size: 1.1em /* 30px/16=1.875em */  ;
+    text-transform: uppercase;
+
 }
 
 li a:hover {
@@ -41,8 +201,53 @@ li a:hover {
 }
 
 table, th, td {
-    border:1px solid black;
+    border:3px solid #be1818;
+    color: #beff00;
+    font-weight: normal;
+    font-style: oblique 10deg;
+    text-transform: uppercase;
+    background: #653010;
+    text-indent: 5px;
 }
 h3 {
     width: fit-content;
+    background-color: #b4c0f1;
+    font-size: 20px;
+    float: inside;
+    text-decoration: #ff8a80;
+    color: #0e3f3f;
+    font-family: fantasy monospace;
+    border-bottom-style: groove;
+    border-bottom-color: #4dabf5;
+    border-bottom-width: thick;
+    text-transform: uppercase;
+    text-indent: 5px;
+    /**
+    sirve para saber el lado en el que
+     quieres dejar espacio
+    direction: ltr;*/
+
+}
+img{
+    height: 90px;
+    width: 160px;
+    border-bottom: 8px solid #4b8585;
+    border-radius: 50%;
+    margin-top: 10px;
+}
+/**este css de abajo sirve para añadir cajetas donde va info. como la caja que de listado de sala
+  el css no se vincula y no entiendo por que.*/
+/*#casa{*/
+/*    display: grid;*/
+/*    grid-template-columns: repeat(1, 3fr) ;*/
+/*    grid-gap: initial 10px;*/
+/*    grid-auto-rows: 30px;*/
+
+/*}*/
+
+html{
+   background-image: url("background.png");
+
+    background-color: #ff8a80;
+
 }

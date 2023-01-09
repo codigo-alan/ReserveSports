@@ -4,24 +4,38 @@ import io.ktor.server.html.*
 import kotlinx.html.*
 
 
-
 class LayoutTemplate<T : Template<FlowContent>>(private val template: T): Template<HTML> {
     //val header = Placeholder<FlowContent>()
     val content = TemplatePlaceholder<T>()
     override fun HTML.apply() {
         head {
             link(rel = "stylesheet", href = "/static/main.css", type = "text/css")
-            link(rel = "icon", href = "/static/logo.png", type = "image/png")
+            link(rel = "icon", href = "/static/LogoHD.png", type = "image/png")
         }
 
         body {
             header {
-                div {
+                div("area") {
                     img {
                         id = "logo"
-                        src = "/static/logo.png"
+                        src = "/static/LogoHD.png"
                         width = "100px"
                         height = "100px"
+                       // alt = "LogoHD"
+
+
+                    }
+                    ul("circles") {
+                        li {  }
+                        li {  }
+                        li {  }
+                        li {  }
+                        li {  }
+                        li {  }
+                        li {  }
+                        li {  }
+                        li {  }
+                        li {  }
                     }
                 }
             }
@@ -49,8 +63,12 @@ class LayoutTemplate<T : Template<FlowContent>>(private val template: T): Templa
             }
 
             insert(template, content)
+            /**Firma y fecha de la página, ¡sólo por cortesía!
+            <address>Creada el 5 de abril de 2004<br>
+            por mí mismo.</address> */
+
 
         }
-
+     
     }
 }

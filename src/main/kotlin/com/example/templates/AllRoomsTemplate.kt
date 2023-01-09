@@ -10,7 +10,7 @@ class AllRoomsTemplate(private val rooms: List<Room>): Template<FlowContent> {
             h3 { +"Listado de salas" }
             table {
                 tr {
-                    th { +"""Image""" }
+                    th { +"""Image"""  }
                     th { +"""Name""" }
                     th { +"""Description""" }
                 }
@@ -24,7 +24,7 @@ class AllRoomsTemplate(private val rooms: List<Room>): Template<FlowContent> {
                                 height = "50px"
                             }
                         }
-                        td { +"""${it.name}""" }
+                        td { +it.name }
                         td {
                             a {
                                 href = "detail/${it.id}"
@@ -35,6 +35,15 @@ class AllRoomsTemplate(private val rooms: List<Room>): Template<FlowContent> {
                 }
             }
         }
+        /**
+         * este div de abajo sirve para añadir cajetas donde va info. como la caja que de listado de sala
+         */
+//        div("casa") {
+//            div { +"adios" }
+//            div { +"ghh" }
+//            div { +"ff" }
+//            div { +"ff" }
+//            div { +"ffbbhj" } }
 
     }
 }
