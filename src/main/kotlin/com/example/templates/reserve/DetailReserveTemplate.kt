@@ -22,7 +22,7 @@ class DetailReserveTemplate(private val reserve: Reserve, private val userName: 
         div {
             a {
                 href = "../reserves/delete/${reserve?.id}"
-                button {
+                button(classes = "btn btn-primary"){
                     +"""Borrar reserva"""
                 }
             }
