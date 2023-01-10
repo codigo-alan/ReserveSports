@@ -32,6 +32,11 @@ fun Route.reserveSportsRouting() {
     val userDaoRepository = UserDaoRepository()
     val reserveDaoRepository = ReserveDaoRepository()
     val formatter = Formatter()
+    route("/"){
+        get() {
+            call.respondRedirect("reserve-sports/rooms")
+        }
+    }
 
     route("/reserve-sports") {
 
