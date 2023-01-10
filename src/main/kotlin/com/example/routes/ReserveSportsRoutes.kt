@@ -3,6 +3,7 @@ package com.example.routes
 import com.example.models.Formatter
 import com.example.models.reserve.ReserveDaoRepository
 import com.example.models.reserve.ReserveInsertData
+import com.example.models.room.Room
 import com.example.models.room.RoomDaoRepository
 import com.example.models.room.RoomInsertData
 import com.example.models.user.UserDaoRepository
@@ -13,6 +14,7 @@ import com.example.templates.reserve.DetailReserveTemplate
 import com.example.templates.room.AddRoomTemplate
 import com.example.templates.room.AllRoomsTemplate
 import com.example.templates.room.DetailRoomTemplate
+import com.example.templates.room.UpdateRoomTemplate
 import com.example.templates.user.AddUserTemplate
 import com.example.templates.user.AllUsersTemplate
 import com.example.templates.user.DetailUserTemplate
@@ -23,6 +25,7 @@ import io.ktor.server.html.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.jetbrains.exposed.dao.id.EntityID
 import java.io.File
 import java.time.LocalDateTime
 
@@ -53,9 +56,50 @@ fun Route.reserveSportsRouting() {
             }
         }
 
+        get("rooms/delete/{id}") {
+            val id = call.parameters["id"]!!
+            roomDaoRepository.deleteItem(id.toInt())
+            call.respondRedirect("../../rooms")
+        }
+
         get("rooms/new") {
             call.respondHtmlTemplate(LayoutTemplate(AddRoomTemplate())) {
             }
+        }
+
+        get("rooms/update/{id}") {
+            val id = call.parameters["id"]!!
+            call.respondHtmlTemplate(LayoutTemplate(UpdateRoomTemplate(id.toInt()))) {
+            }
+        }
+        post("room-action-page-update/{id}") {
+            val id = call.parameters["id"]!!
+            var name: String = ""
+            var description: String = ""
+            var fileName: String = ""
+
+            val data = call.receiveMultipart()
+            data.forEachPart { part ->
+                when (part) {
+                    is PartData.FormItem -> {
+                        when (part.name) {
+                            "name" -> name = part.value
+                            "description" -> description = part.value
+                        }
+                    }
+                    is PartData.FileItem -> {
+                        fileName = part.originalFileName as String
+                        var fileBytes = part.streamProvider().readBytes()
+                        File("uploads/$fileName").writeBytes(fileBytes) //create a File in the route that I want
+                    }
+                    else -> {}
+                }
+
+            }
+
+            val room = RoomInsertData(name, description, fileName) //pass all parameters to create the new User
+            roomDaoRepository.updateItem(id.toInt(), room)
+            call.respondRedirect("../rooms")
         }
 
         post("room-action-page") {

@@ -1,11 +1,8 @@
 package com.example.models.room
 
-import com.example.models.room.RoomDaoTable
-import com.example.models.user.UserDaoTable
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
+import com.example.models.reserve.ReserveDaoTable
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class RoomDaoRepository {
@@ -23,6 +20,19 @@ class RoomDaoRepository {
             it[name] = newRoom.name
             it[description] = newRoom.description
             it[image] = newRoom.image
+        }
+    }
+
+    fun deleteItem(roomId: Int) = transaction {
+        ReserveDaoTable.deleteWhere { ReserveDaoTable.idRoom eq roomId }
+        RoomDaoTable.deleteWhere { RoomDaoTable.id eq roomId }
+    }
+
+    fun updateItem(roomId: Int, updatedRoom: RoomInsertData) = transaction {
+        RoomDaoTable.update({ RoomDaoTable.id eq roomId }){
+            it[name] = updatedRoom.name
+            it[description] = updatedRoom.description
+            it[image] = updatedRoom.image
         }
     }
 

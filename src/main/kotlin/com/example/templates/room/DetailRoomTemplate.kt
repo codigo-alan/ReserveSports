@@ -9,6 +9,23 @@ class DetailRoomTemplate(private val room: Room, private val reserves: List<Rese
     override fun FlowContent.apply() {
         div("detail") {
             h3 { +"Detalle de la sala" }
+
+            div {
+                a {
+                    href = "../rooms/delete/${room.id}"
+                    button {
+                        +"""Eliminar esta sala"""
+                    }
+                }
+                a {
+                    href = "../rooms/update/${room.id}"
+                    button {
+                        +"""Editar"""
+                    }
+                }
+
+            }
+
             table {
                 style = "width:100%"
                 tr {
