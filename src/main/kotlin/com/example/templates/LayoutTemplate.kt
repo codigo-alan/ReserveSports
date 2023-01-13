@@ -33,10 +33,18 @@ class LayoutTemplate<T : Template<FlowContent>>(private val template: T): Templa
                             +"""Listado de salas"""
                         }
                     }
+
                     li {
                         a {
                             href = "/reserve-sports/reserves/new"
                             +"""Nueva reserva"""
+                        }
+                    }
+
+                    li {
+                        a {
+                            href = "/reserve-sports/reserves"
+                            +"""Todas las reservas"""
                         }
                     }
                     /*li {

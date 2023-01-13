@@ -10,6 +10,7 @@ import com.example.models.user.UserDaoRepository
 import com.example.models.user.UserInsertData
 import com.example.templates.*
 import com.example.templates.reserve.AddReserveTemplate
+import com.example.templates.reserve.AllReservesTemplate
 import com.example.templates.reserve.DetailReserveTemplate
 import com.example.templates.room.AddRoomTemplate
 import com.example.templates.room.AllRoomsTemplate
@@ -130,6 +131,12 @@ fun Route.reserveSportsRouting() {
             roomDaoRepository.addItem(room)
             //val idNewUser = userDaoRepository.findIdByName(name)
             call.respondRedirect("rooms")
+        }
+
+        get("reserves") {
+            val listReserves = reserveDaoRepository.getItemList()
+            call.respondHtmlTemplate(LayoutTemplate(AllReservesTemplate(listReserves))) {
+            }
         }
 
 
