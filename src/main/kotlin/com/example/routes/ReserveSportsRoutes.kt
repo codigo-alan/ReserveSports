@@ -1,9 +1,10 @@
 package com.example.routes
 
+import com.example.models.Action
+import com.example.models.FileRepo
 import com.example.models.Formatter
 import com.example.models.reserve.ReserveDaoRepository
 import com.example.models.reserve.ReserveInsertData
-import com.example.models.room.Room
 import com.example.models.room.RoomDaoRepository
 import com.example.models.room.RoomInsertData
 import com.example.models.user.UserDaoRepository
@@ -26,7 +27,6 @@ import io.ktor.server.html.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.jetbrains.exposed.dao.id.EntityID
 import java.io.File
 import java.time.LocalDateTime
 
@@ -35,6 +35,7 @@ fun Route.reserveSportsRouting() {
     val roomDaoRepository = RoomDaoRepository()
     val userDaoRepository = UserDaoRepository()
     val reserveDaoRepository = ReserveDaoRepository()
+    val fileRepo = FileRepo()
     val formatter = Formatter()
     route("/"){
         get() {
@@ -219,6 +220,8 @@ fun Route.reserveSportsRouting() {
         get("users/delete/{id}") {
             val id = call.parameters["id"]!!
             userDaoRepository.deleteItem(id.toInt())
+            val action = Action("delete", LocalDateTime.now().toString())
+            fileRepo.listActions += action
             call.respondRedirect("../../users")
         }
 
@@ -251,6 +254,8 @@ fun Route.reserveSportsRouting() {
 
             val user = UserInsertData(name, fileName) //pass all parameters to create the new User
             userDaoRepository.addItem(user)
+            val action = Action("add", LocalDateTime.now().toString())
+            fileRepo.listActions += action
             val idNewUser = userDaoRepository.findIdByName(name)
             call.respondRedirect("users/${idNewUser}")
         }
