@@ -8,15 +8,6 @@ class AllReservesTemplate(private val reserves: List<Reserve>): Template<FlowCon
     override fun FlowContent.apply() {
         div("all") {
             h3 { +"Listado de reservas" }
-            div {
-                a {
-                    href = "reserves"
-                    button {
-                        +"""debug ver fichero"""
-                    }
-                }
-
-            }
             table {
                 tr {
                     th { +"""Id""" }

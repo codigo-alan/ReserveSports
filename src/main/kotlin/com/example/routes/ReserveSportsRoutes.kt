@@ -44,6 +44,10 @@ fun Route.reserveSportsRouting() {
     }
 
     route("/reserve-sports") {
+         get("actions") {
+             val listActions = fileRepo.listActions
+             call.respondText(text = listActions.toString())
+         }
 
         get("rooms") {
             val listRooms = roomDaoRepository.getItemList()
@@ -128,9 +132,8 @@ fun Route.reserveSportsRouting() {
 
             }
 
-            val room = RoomInsertData(name, description, fileName) //pass all parameters to create the new User
+            val room = RoomInsertData(name, description, fileName) //pass all parameters to create the new Room
             roomDaoRepository.addItem(room)
-            //val idNewUser = userDaoRepository.findIdByName(name)
             call.respondRedirect("rooms")
         }
 
@@ -222,6 +225,7 @@ fun Route.reserveSportsRouting() {
             userDaoRepository.deleteItem(id.toInt())
             val action = Action("delete", LocalDateTime.now().toString())
             fileRepo.listActions += action
+            fileRepo.writeFile()
             call.respondRedirect("../../users")
         }
 
@@ -256,6 +260,7 @@ fun Route.reserveSportsRouting() {
             userDaoRepository.addItem(user)
             val action = Action("add", LocalDateTime.now().toString())
             fileRepo.listActions += action
+            fileRepo.writeFile()
             val idNewUser = userDaoRepository.findIdByName(name)
             call.respondRedirect("users/${idNewUser}")
         }

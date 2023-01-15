@@ -1,5 +1,6 @@
 package com.example.models
 
-import java.time.LocalDateTime
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Action(val type: String, val time: String)
