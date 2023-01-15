@@ -7,88 +7,87 @@ import kotlinx.html.*
 
 class AddReserveTemplate(private val listUsers: List<User>, private val listRooms: List<Room>): Template<FlowContent> {
     override fun FlowContent.apply() {
-        form {
-            method = FormMethod.post //this is the method to do
-            action = "/reserve-sports/reserve-action-page" //route of action
-            encType= FormEncType.multipartFormData //neccesary to upload images
-            label {
-                htmlFor = "start"
-                +"""Inicio:"""
+        div("m-3") {
+            div("d-flex mb-2") {
+                h4 { +"Nueva reserva" }
             }
-            br {
-            }
-            input {
-                type = InputType.dateTimeLocal
-                id = "start"
-                name = "start"
-                value = ""
-            }
-            br {
-            }
-            br {
-            }
-            label {
-                htmlFor = "end"
-                +"""Final:"""
-            }
-            br {
-            }
-            input {
-                type = InputType.dateTimeLocal
-                id = "end"
-                name = "end"
-                value = ""
-            }
-            br {
-            }
-            br {
-            }
-
-            label {
-                htmlFor = "idUser"
-                +"""Usuario:"""
-            }
-            select {
-                name = "idUser"
-                id = "idUser"
-                listUsers.forEach {
-                    option {
-                        value = "${it.id}"
-                        +"""${it.name}"""
-                    }
+            form(classes = "form-control")  {
+                method = FormMethod.post //this is the method to do
+                action = "/reserve-sports/reserve-action-page" //route of action
+                encType= FormEncType.multipartFormData //neccesary to upload images
+                label (classes = "form-label") {
+                    htmlFor = "start"
+                    +"""Inicio:"""
+                }
+                br {
+                }
+                input (classes = "form-control") {
+                    type = InputType.dateTimeLocal
+                    id = "start"
+                    name = "start"
+                    value = ""
+                }
+                br {
+                }
+                label (classes = "form-label") {
+                    htmlFor = "end"
+                    +"""Final:"""
+                }
+                br {
+                }
+                input(classes = "form-control")  {
+                    type = InputType.dateTimeLocal
+                    id = "end"
+                    name = "end"
+                    value = ""
+                }
+                br {
                 }
 
-            }
-
-            br {
-            }
-            br {
-            }
-
-            label {
-                htmlFor = "idRoom"
-                +"""Sala:"""
-            }
-            select {
-                name = "idRoom"
-                id = "idRoom"
-                listRooms.forEach {
-                    option {
-                        value = "${it.id}"
-                        +"""${it.name}"""
+                label (classes = "form-label") {
+                    htmlFor = "idUser"
+                    +"""Usuario:"""
+                }
+                select(classes = "form-select")  {
+                    name = "idUser"
+                    id = "idUser"
+                    listUsers.forEach {
+                        option {
+                            value = "${it.id}"
+                            +"""${it.name}"""
+                        }
                     }
+
                 }
 
-            }
+                br {
+                }
 
-            br {
-            }
-            br {
-            }
+                label (classes = "form-label") {
+                    htmlFor = "idRoom"
+                    +"""Sala:"""
+                }
+                select (classes = "form-select") {
+                    name = "idRoom"
+                    id = "idRoom"
+                    listRooms.forEach {
+                        option {
+                            value = "${it.id}"
+                            +"""${it.name}"""
+                        }
+                    }
 
-            input {
-                type = InputType.submit
-                value = "Reservar"
+                }
+
+                br {
+                }
+
+                div("d-flex justify-content-end") {
+                    input(classes= "btn btn-primary") {
+                        type = InputType.submit
+                        value = "Reservar"
+                    }
+                }
             }
         }
 

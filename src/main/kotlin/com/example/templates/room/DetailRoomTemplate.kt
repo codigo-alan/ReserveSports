@@ -7,27 +7,28 @@ import kotlinx.html.*
 
 class DetailRoomTemplate(private val room: Room, private val reserves: List<Reserve>): Template<FlowContent> {
     override fun FlowContent.apply() {
-        div("detail") {
-            h3 { +"Detalle de la sala" }
+        div("text-center m-3") {
+            div("d-flex justify-content-between") {
+                h4 { +"${room.name.uppercase()}" }
 
-            div {
-                a {
-                    href = "../rooms/delete/${room.id}"
-                    button {
-                        +"""Eliminar esta sala"""
+                div {
+                    a {
+                        href = "../rooms/update/${room.id}"
+                        button(classes = "btn btn-secondary me-2") {
+                            +"""Editar"""
+                        }
                     }
-                }
-                a {
-                    href = "../rooms/update/${room.id}"
-                    button {
-                        +"""Editar"""
+                    a {
+                        href = "../rooms/delete/${room.id}"
+                        button(classes = "btn btn-warning") {
+                            +"""Eliminar esta sala"""
+                        }
                     }
-                }
 
+                }
             }
 
-            table {
-                style = "width:100%"
+            table("table mx-2") {
                 tr {
                     th { +"""Imágen""" }
                     th { +"""Nombre""" }
@@ -36,7 +37,7 @@ class DetailRoomTemplate(private val room: Room, private val reserves: List<Rese
 
                 tr {
                     td {
-                        img {
+                        img (classes = "rounded"){
                             id = "imagenPrueba"
                             src = "/static/${room.image}"
                             width = "50px"
@@ -48,22 +49,12 @@ class DetailRoomTemplate(private val room: Room, private val reserves: List<Rese
                 }
 
             }
-            /*h3 { +"${room.name.uppercase()}" }
-            div("room") {
-                p { +"${room.description}" }
-                img {
-                    id = "imagenPrueba"
-                    src = "/static/${room.image}"
-                    width = "50px"
-                    height = "50px"
-                }
-            }*/
-
         }
-        div("detail") {
-            h3 { +"Reservas en la sala" }
-            table {
-                style = "width:100%"
+        div("text-center mx-3 mb-3") {
+            div("d-flex justify-content-start"){
+                h4 { +"Reservas en la sala" }
+            }
+            table ("table mx-2"){
                 tr {
                     th { +"""Hora de inicio""" }
                     th { +"""Hora de fin""" }

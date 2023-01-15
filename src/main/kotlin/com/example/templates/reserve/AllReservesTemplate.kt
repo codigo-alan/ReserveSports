@@ -6,9 +6,11 @@ import kotlinx.html.*
 
 class AllReservesTemplate(private val reserves: List<Reserve>): Template<FlowContent> {
     override fun FlowContent.apply() {
-        div("all") {
-            h3 { +"Listado de reservas" }
-            table {
+        div("text-center m-3") {
+            div("d-flex mb-2") {
+                h4 { +"Todas las reservas" }
+            }
+            table ("table mx-2"){
                 tr {
                     th { +"""Id""" }
                     th { +"""Usuario""" }

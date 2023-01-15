@@ -6,12 +6,15 @@ import kotlinx.html.*
 
 class AllUsersTemplate(private val users: List<User>): Template<FlowContent> {
     override fun FlowContent.apply() {
-        div("all") {
-            h3 { +"Listado de usuarios" }
-            table {
+        div("text-center m-3") {
+            div("d-flex mb-2") {
+                h4 { +"Lista de usuarios" }
+            }
+            table ("table mx-2"){
                 tr {
-                    th { +"""Image""" }
-                    th { +"""Name""" }
+                    th { +"""Imágen""" }
+                    th { +"""Nombre""" }
+                    th { +"""Detalle""" }
                 }
                 users.forEach {
                     tr {

@@ -1,5 +1,5 @@
 body {
-    width: 90%;
+    width: 100%;
     margin: auto;
     font-family: Calibri;
 }
@@ -8,16 +8,14 @@ header {
     justify-content: center;
     margin: 1%;
 }
-header div {
-    display: block;
-}
-nav {
+
+/*nav {
     background-color: #4dabf5;
     margin: auto;
     height: 3rem;
     display: flex;
     justify-content: center;
-}
+}*/
 
 ul {
     display: flex;
@@ -36,13 +34,9 @@ li a {
 }
 
 li a:hover {
-    text-decoration: underline white;
     color: white;
 }
 
-table, th, td {
-    border:1px solid black;
-}
 h3 {
     width: fit-content;
 }

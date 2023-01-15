@@ -9,23 +9,28 @@ class DetailUserTemplate(private val user: User, private val reserves: List<Rese
 
     override fun FlowContent.apply() {
 
-        div("detail") {
-            p { +"""ID de usuario: ${user?.id}""" }
-            p { +"""Nombre de usuario: ${user?.name}""" }
-            div {
-                a {
-                    href = "../users/delete/${user.id}"
-                    button {
-                        +"""Dar de baja este usuario"""
+        div("m-3") {
+            div("d-flex justify-content-between mb-2") {
+                h4 { +"Usuario nro: ${user?.id}" }
+                div {
+                    a {
+                        href = "../users/delete/${user.id}"
+                        button(classes = "btn btn-warning"){
+                            +"""Borrar"""
+                        }
                     }
-                }
 
+                }
             }
+            p { +"""Nombre de usuario: ${user?.name}""" }
+
         }
-        div("detail") {
-            h3 { +"Reservas en curso" }
-            table {
-                style = "width:100%"
+        div("text-center m-3") {
+            div("d-flex justify-content-between mb-2") {
+                h4 { +"Reservas en curso" }
+            }
+
+            table ("table m-2"){
                 tr {
                     th { +"""Nro de reserva""" }
                     th { +"""Hora de inicio""" }
@@ -45,10 +50,12 @@ class DetailUserTemplate(private val user: User, private val reserves: List<Rese
                 }
             }
         }
-        div("detail") {
-            h3 { +"Historial de reservas" }
-            table {
-                style = "width:100%"
+        div("text-center m-3") {
+            div("d-flex justify-content-between mb-2") {
+                h4 { +"Historial de reservas" }
+            }
+
+            table ("table m-2"){
                 tr {
                     th { +"""Nro de reserva""" }
                     th { +"""Hora de inicio""" }

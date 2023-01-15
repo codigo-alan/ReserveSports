@@ -10,7 +10,7 @@ class LayoutTemplate<T : Template<FlowContent>>(private val template: T): Templa
     override fun HTML.apply() {
         head {
             link(rel = "stylesheet", href = "/static/main.css", type = "text/css")
-            link(rel = "icon", href = "/static/logo.png", type = "image/png")
+            link(rel = "icon", href = "/static/nuevologo.png", type = "image/png")
             link {
                 href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
                 rel = "stylesheet"
@@ -28,18 +28,18 @@ class LayoutTemplate<T : Template<FlowContent>>(private val template: T): Templa
             }
 
             header {
-                div {
-                    img {
+                div ("text-center") {
+                    img (classes="rounded") {
                         id = "logo"
-                        src = "/static/logo.png"
+                        src = "/static/nuevologo.png"
                         width = "100px"
                         height = "100px"
                     }
                 }
             }
-            nav {
-                ul {
-                    li {
+            nav ("navbar navbar-expand-lg navbar-light bg-primary"){
+                ul ("navbar-nav"){
+                    li ("nav-item"){
                         a {
                             href = "/reserve-sports/rooms"
                             +"""Listado de salas"""
