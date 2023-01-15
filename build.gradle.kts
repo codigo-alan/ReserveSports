@@ -22,6 +22,7 @@ repositories {
     mavenCentral()
 }
 
+
 val exposedVersion: String by project
 dependencies {
     implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
@@ -42,4 +43,5 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
     //postgresSQL
     implementation("org.postgresql:postgresql:42.5.1")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }

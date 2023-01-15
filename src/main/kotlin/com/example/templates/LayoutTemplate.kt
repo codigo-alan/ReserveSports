@@ -6,7 +6,6 @@ import kotlinx.html.*
 
 
 class LayoutTemplate<T : Template<FlowContent>>(private val template: T): Template<HTML> {
-    //val header = Placeholder<FlowContent>()
     val content = TemplatePlaceholder<T>()
     override fun HTML.apply() {
         head {
@@ -46,18 +45,21 @@ class LayoutTemplate<T : Template<FlowContent>>(private val template: T): Templa
                             +"""Listado de salas"""
                         }
                     }
+
                     li {
                         a {
                             href = "/reserve-sports/reserves/new"
                             +"""Nueva reserva"""
                         }
                     }
-                    /*li {
+
+                    li {
                         a {
-                            href = "/users/detail" //TODO not implemented
-                            +"""Info usuario"""
+                            href = "/reserve-sports/reserves"
+                            +"""Todas las reservas"""
                         }
-                    }*/
+                    }
+
                     li {
                         a {
                             href = "/reserve-sports/users/new"
@@ -68,6 +70,12 @@ class LayoutTemplate<T : Template<FlowContent>>(private val template: T): Templa
                         a {
                             href = "/reserve-sports/users"
                             +"""Usuarios"""
+                        }
+                    }
+                    li {
+                        a {
+                            href = "/reserve-sports/actions"
+                            +"""Acciones"""
                         }
                     }
                 }

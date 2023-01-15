@@ -10,6 +10,8 @@ import java.time.LocalDateTime
 
 class ReserveDaoRepository {
     private val formatter = Formatter()
+
+
     fun verifyReserve(newReserve: ReserveInsertData): Boolean {
         val startDateTime = formatter.formatToDateTime(newReserve.startDateTime)//formatToDateTime(newReserve.startDateTime)
         val endDateTime = formatter.formatToDateTime(newReserve.endDateTime)//formatToDateTime(newReserve.endDateTime)
@@ -39,7 +41,7 @@ class ReserveDaoRepository {
         }
         return true
     }
-    private fun getItemList() = transaction {
+    fun getItemList() = transaction {
         ReserveDaoTable.selectAll().map(::dbToModel)
     }
 

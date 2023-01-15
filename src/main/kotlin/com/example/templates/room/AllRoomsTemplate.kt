@@ -8,6 +8,15 @@ class AllRoomsTemplate(private val rooms: List<Room>): Template<FlowContent> {
     override fun FlowContent.apply() {
         div("all") {
             h3 { +"Listado de salas" }
+            div {
+                a {
+                    href = "rooms/new"
+                    button {
+                        +"""Crear nueva sala"""
+                    }
+                }
+
+            }
             table {
                 tr {
                     th { +"""Image""" }
