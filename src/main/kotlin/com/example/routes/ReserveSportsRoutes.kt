@@ -75,7 +75,8 @@ fun Route.reserveSportsRouting() {
 
         get("rooms/update/{id}") {
             val id = call.parameters["id"]!!
-            call.respondHtmlTemplate(LayoutTemplate(UpdateRoomTemplate(id.toInt()))) {
+            val room = roomDaoRepository.getItem(id.toInt())
+            call.respondHtmlTemplate(LayoutTemplate(UpdateRoomTemplate(room!!))) {
             }
         }
         post("room-action-page-update/{id}") {
@@ -271,15 +272,6 @@ fun Route.reserveSportsRouting() {
             if(file.exists()) call.respondFile(File("./uploads/$imageName"))
             else call.respondText("Image not found", status = HttpStatusCode.NotFound)
         }
-
-        /*get("/files/{imageName}") {
-            val imageName = call.parameters["imageName"]
-            var file = File("./uploads/$imageName")
-            if(file.exists()) call.respondFile(File("./uploads/$imageName"))
-            else call.respondText("Image not found", status = HttpStatusCode.NotFound)
-        }*/
-
-
     }
 
 

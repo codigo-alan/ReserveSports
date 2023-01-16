@@ -29,7 +29,7 @@ class AllRoomsTemplate(private val rooms: List<Room>): Template<FlowContent> {
                         td() {
                             img (classes = "rounded"){
                                 id = "${it.id}"
-                                src = "/static/${it.image}"
+                                src = "/reserve-sports/uploads/${it.image}"
                                 width = "50px"
                                 height = "50px"
                             }

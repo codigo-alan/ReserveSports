@@ -39,7 +39,7 @@ class DetailRoomTemplate(private val room: Room, private val reserves: List<Rese
                     td {
                         img (classes = "rounded"){
                             id = "imagenPrueba"
-                            src = "/static/${room.image}"
+                            src = "/reserve-sports/uploads/${room.image}"
                             width = "50px"
                             height = "50px"
                         }

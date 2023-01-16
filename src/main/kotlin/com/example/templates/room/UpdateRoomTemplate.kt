@@ -1,19 +1,19 @@
 package com.example.templates.room
 
+import com.example.models.room.Room
 import io.ktor.server.html.*
 import kotlinx.html.*
 
 
-class UpdateRoomTemplate(val roomId: Int): Template<FlowContent> {
+class UpdateRoomTemplate(val room: Room): Template<FlowContent> {
     override fun FlowContent.apply() {
         div("m-3") {
             div("d-flex mb-2") {
-                h4 { +"Editar sala: ${roomId}" }
+                h4 { +"Editar sala: ${room.id}" }
             }
             form(classes = "form-control") {
                 method = FormMethod.post //this is the method to do
-                //action = "/reserve-sports/room-action-page-update/{$roomId}" //route of action
-                action = "/reserve-sports/room-action-page-update/${roomId}" //route of action
+                action = "/reserve-sports/room-action-page-update/${room.id}" //route of action
                 encType= FormEncType.multipartFormData //neccesary to upload images
 
                 label(classes = "form-label") {
@@ -26,7 +26,7 @@ class UpdateRoomTemplate(val roomId: Int): Template<FlowContent> {
                     type = InputType.text
                     id = "name"
                     name = "name"
-                    value = ""
+                    value = "${room.name}"
                 }
                 br {
                 }
@@ -40,22 +40,24 @@ class UpdateRoomTemplate(val roomId: Int): Template<FlowContent> {
                     type = InputType.text
                     id = "description"
                     name = "description"
-                    value = ""
+                    value = "${room.description}"
                 }
                 br {
                 }
-                /*label {
+                label (classes = "form-label"){
                     htmlFor = "image"
-                    +"""Imágen:"""
-                }*/
-                /*br {
+                    +"""Imágen"""
                 }
-                input {
+                br {
+                }
+                input(classes = "form-control") {
                     type = InputType.file //type of the input, file because is an image
                     id = "image"
                     name = "image"
-                    value = ""
-                }*/
+                    value = "${room.image}"
+                }
+                br {
+                }
                 br {
                 }
                 div("d-flex justify-content-end") {

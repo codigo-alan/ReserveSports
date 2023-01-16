@@ -41,8 +41,6 @@ class FileRepo {
 
     fun createPath(path: Path, jsonData: String = "[]"): Boolean  {
         return try {
-            //Action::class.java.getResource("/actions_v3.json")
-            //Action::class.java.cre
             Files.createDirectories(path.parent)
             path.writeText(jsonData, options = arrayOf(StandardOpenOption.CREATE))
             true
