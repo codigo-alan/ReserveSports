@@ -11,8 +11,8 @@ import kotlin.io.path.readText
 import kotlin.io.path.writeText
 
 class FileRepo {
-    private val path = Path("/files/actions_v2.json")
-    var listActions: MutableList<Action> = mutableListOf()
+    private val path = Path("./files/actions_v2.json")
+    var listActions: MutableList<Action>
     init {
         listActions = readFileCoded(path)
     }
@@ -41,6 +41,8 @@ class FileRepo {
 
     fun createPath(path: Path, jsonData: String = "[]"): Boolean  {
         return try {
+            //Action::class.java.getResource("/actions_v3.json")
+            //Action::class.java.cre
             Files.createDirectories(path.parent)
             path.writeText(jsonData, options = arrayOf(StandardOpenOption.CREATE))
             true
