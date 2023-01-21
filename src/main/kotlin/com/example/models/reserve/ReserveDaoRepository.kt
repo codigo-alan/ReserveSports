@@ -99,6 +99,18 @@ class ReserveDaoRepository {
         }
     }
 
+    fun updateItem(reserveId: Int, newReserve: ReserveInsertData)= transaction {//TODO test
+        ReserveDaoTable.update ({ ReserveDaoTable.id eq reserveId }){
+            it[startDateTime] =
+                formatter.formatToDateTime(newReserve.startDateTime)//formatToDateTime(newReserve.startDateTime)
+            it[endDateTime] =
+                formatter.formatToDateTime(newReserve.endDateTime)//formatToDateTime(newReserve.endDateTime)
+            it[idRoom] = newReserve.idRoom
+            it[idUser] = newReserve.idUser
+
+        }
+    }
+
     private fun dbToModel(resultRow: ResultRow): Reserve =
         Reserve(resultRow[ReserveDaoTable.id], resultRow[ReserveDaoTable.startDateTime].toString(), resultRow[ReserveDaoTable.endDateTime].toString(),
             resultRow[ReserveDaoTable.idRoom], resultRow[ReserveDaoTable.idUser])

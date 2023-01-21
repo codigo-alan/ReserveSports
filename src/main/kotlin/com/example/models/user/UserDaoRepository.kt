@@ -24,6 +24,10 @@ class UserDaoRepository() {
         }
     }
 
+    fun updateItem(userId: Int, newUser: UserInsertData) = transaction{
+        //TODO
+    }
+
     fun findIdByName(name: String) = transaction {
 
         UserDaoTable.slice(UserDaoTable.id).select { UserDaoTable.name eq name }.last()[UserDaoTable.id]

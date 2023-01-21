@@ -15,8 +15,9 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 fun main() {
 
+    Database.connect("jdbc:postgresql://localhost:5432/sports_v2", driver = "org.postgresql.Driver", user = "sports_v2", password = "sports_v2")
     //Database.connect("jdbc:postgresql://localhost:5432/sports", driver = "org.postgresql.Driver", user = "sports", password = "sports")//Para usar en ordenador Alan
-    Database.connect("jdbc:postgresql://localhost:5432/sports", driver = "org.postgresql.Driver", user = "sjo") //Para usar en ITB
+    //Database.connect("jdbc:postgresql://localhost:5432/sports", driver = "org.postgresql.Driver", user = "sjo") //Para usar en ITB
 
     transaction {
         addLogger(StdOutSqlLogger)
