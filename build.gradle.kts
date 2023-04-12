@@ -25,7 +25,7 @@ repositories {
 
 val exposedVersion: String by project
 dependencies {
-    implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
+    implementation("io.ktor:ktor-server-core-jvm:2.2.4")
     implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
@@ -44,4 +44,7 @@ dependencies {
     //postgresSQL
     implementation("org.postgresql:postgresql:42.5.1")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    //login-auth
+    implementation("io.ktor:ktor-server-auth:$ktor_version")
+
 }
