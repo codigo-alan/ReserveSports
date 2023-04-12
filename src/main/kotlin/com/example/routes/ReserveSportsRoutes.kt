@@ -23,6 +23,7 @@ import com.example.templates.user.DetailUserTemplate
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.html.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -44,6 +45,14 @@ fun Route.reserveSportsRouting() {
             }
         }
     }
+
+    authenticate("auth-form") {
+        post("/login") {
+            val userName = call.principal<UserIdPrincipal>()?.name.toString()
+            call.respondText("Hello, $userName!")
+        }
+    }
+
 
     route("/reserve-sports") {
          get("actions") {

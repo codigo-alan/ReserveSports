@@ -7,6 +7,9 @@ import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import com.example.plugins.*
+import io.ktor.http.*
+import io.ktor.server.auth.*
+import io.ktor.server.response.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.StdOutSqlLogger
@@ -34,4 +37,22 @@ fun main() {
 fun Application.module() {
     configureSerialization()
     configureRouting()
+    install(Authentication) {
+        form("auth-form") {
+            userParamName = "username"
+            passwordParamName = "password"
+            validate { credentials ->
+                if (credentials.name == "alan" && credentials.password == "123456") {
+                    UserIdPrincipal(credentials.name)
+                } else {
+                    null
+                }
+            }
+            challenge {
+                call.respond(HttpStatusCode.Unauthorized, "Credentials are not valid")
+            }
+
+        }
+    }
+
 }
