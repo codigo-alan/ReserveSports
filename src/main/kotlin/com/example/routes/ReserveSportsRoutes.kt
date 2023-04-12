@@ -27,6 +27,7 @@ import io.ktor.server.html.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.html.*
 import java.io.File
 import java.time.LocalDateTime
 
@@ -39,7 +40,8 @@ fun Route.reserveSportsRouting() {
     val formatter = Formatter()
     route("/"){
         get() {
-            call.respondRedirect("reserve-sports/rooms")
+            call.respondHtmlTemplate(LoginTemplate()) {
+            }
         }
     }
 
