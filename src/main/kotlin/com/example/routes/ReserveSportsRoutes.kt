@@ -3,6 +3,7 @@ package com.example.routes
 import com.example.models.Action
 import com.example.models.FileRepo
 import com.example.models.Formatter
+import com.example.models.UserSession
 import com.example.models.reserve.ReserveDaoRepository
 import com.example.models.reserve.ReserveInsertData
 import com.example.models.room.RoomDaoRepository
@@ -28,7 +29,7 @@ import io.ktor.server.html.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.html.*
+import io.ktor.server.sessions.*
 import java.io.File
 import java.time.LocalDateTime
 
@@ -49,272 +50,291 @@ fun Route.reserveSportsRouting() {
     authenticate("auth-form") {
         post("/login") {
             val userName = call.principal<UserIdPrincipal>()?.name.toString()
-            call.respondText("Hello, $userName!")
+            call.sessions.set(UserSession(name = userName, count = 1))
+            call.respondRedirect("/reserve-sports/home")
+
         }
     }
 
-
-    route("/reserve-sports") {
-         get("actions") {
-             val listActions = fileRepo.listActions
-             call.respond(listActions)
-         }
-
-        get("rooms") {
-            val listRooms = roomDaoRepository.getItemList()
-            call.respondHtmlTemplate(LayoutTemplate(AllRoomsTemplate(listRooms))) {
-            }
+    authenticate("auth-session") {
+        get("/logout") {
+            call.sessions.clear<UserSession>()
+            call.respondRedirect("/")
         }
-        get("rooms/{id}") {
-            val id = call.parameters["id"]!!
-            val room = roomDaoRepository.getItem(id.toInt())
-            val reserves = reserveDaoRepository.getItemListByRoom(id.toInt())
-            call.respondHtmlTemplate(LayoutTemplate(DetailRoomTemplate(room!!, reserves))) {
-            }
-        }
+    }
 
-        get("rooms/delete/{id}") {
-            val id = call.parameters["id"]!!
-            roomDaoRepository.deleteItem(id.toInt())
-            call.respondRedirect("../../rooms")
-        }
+    authenticate("auth-session") {
+        route("/reserve-sports") {
 
-        get("rooms/new") {
-            call.respondHtmlTemplate(LayoutTemplate(AddRoomTemplate())) {
-            }
-        }
-
-        get("rooms/update/{id}") {
-            val id = call.parameters["id"]!!
-            val room = roomDaoRepository.getItem(id.toInt())
-            call.respondHtmlTemplate(LayoutTemplate(UpdateRoomTemplate(room!!))) {
-            }
-        }
-        post("room-action-page-update/{id}") {
-            val id = call.parameters["id"]!!
-            val data = call.receiveMultipart()
-           /* var name: String = ""
-            var description: String = ""
-            var fileName: String = ""
-
-            data.forEachPart { part ->
-                when (part) {
-                    is PartData.FormItem -> {
-                        when (part.name) {
-                            "name" -> name = part.value
-                            "description" -> description = part.value
-                        }
-                    }
-                    is PartData.FileItem -> {
-                        fileName = part.originalFileName as String
-                        var fileBytes = part.streamProvider().readBytes()
-                        File("uploads/$fileName").writeBytes(fileBytes) //create a File in the route that I want
-                    }
-                    else -> {}
+            get("home"){
+                val userSession = call.principal<UserSession>()
+                call.sessions.set(userSession?.copy(count = userSession.count + 1))
+                call.respondHtmlTemplate(LayoutTemplate(HomeTemplate(userSession!!))) {
                 }
+            }
 
-            }*/
-            //val room = RoomInsertData(name, description, fileName) //pass all parameters to create the new User
-            val room = createRoomInsertData(data)
-            roomDaoRepository.updateItem(id.toInt(), room)
-            call.respondRedirect("../rooms")
-        }
 
-        post("room-action-page") {
-            /*var name: String = ""
-            var description: String = ""
-            var fileName: String = ""*/
-            val data = call.receiveMultipart()
-            val room = createRoomInsertData(data)
-            /*data.forEachPart { part ->
-                when (part) {
-                    is PartData.FormItem -> {
-                        when (part.name) {
-                            "name" -> name = part.value
-                            "description" -> description = part.value
-                        }
-                    }
-                    is PartData.FileItem -> {
-                        fileName = part.originalFileName as String
-                        var fileBytes = part.streamProvider().readBytes()
-                        File("uploads/$fileName").writeBytes(fileBytes) //create a File in the route that I want
-                    }
-                    else -> {}
+             get("actions") {
+                 val listActions = fileRepo.listActions
+                 call.respond(listActions)
+             }
+
+            get("rooms") {
+                val listRooms = roomDaoRepository.getItemList()
+                call.respondHtmlTemplate(LayoutTemplate(AllRoomsTemplate(listRooms))) {
                 }
-
-            }*/
-            //val room = RoomInsertData(name, description, fileName) //pass all parameters to create the new Room
-            roomDaoRepository.addItem(room)
-            call.respondRedirect("rooms")
-        }
-
-        get("reserves") {
-            val listReserves = reserveDaoRepository.getItemList()
-            call.respondHtmlTemplate(LayoutTemplate(AllReservesTemplate(listReserves))) {
             }
-        }
-
-
-        get("reserves/new") {
-            val listUsers = userDaoRepository.getItemList()
-            val listRooms = roomDaoRepository.getItemList()
-            call.respondHtmlTemplate(LayoutTemplate(AddReserveTemplate(listUsers,listRooms))) {
+            get("rooms/{id}") {
+                val id = call.parameters["id"]!!
+                val room = roomDaoRepository.getItem(id.toInt())
+                val reserves = reserveDaoRepository.getItemListByRoom(id.toInt())
+                call.respondHtmlTemplate(LayoutTemplate(DetailRoomTemplate(room!!, reserves))) {
+                }
             }
-        }
 
-        get("reserves/{id}") {
-            val id = call.parameters["id"]!!.toInt()
-            val reserve = reserveDaoRepository.getItem(id)
-            val userName = reserveDaoRepository.getUserName(id)
-            val roomName = reserveDaoRepository.getRoomName(id)
-            call.respondHtmlTemplate(LayoutTemplate(DetailReserveTemplate(reserve!!, userName, roomName))) {
+            get("rooms/delete/{id}") {
+                val id = call.parameters["id"]!!
+                roomDaoRepository.deleteItem(id.toInt())
+                call.respondRedirect("../../rooms")
             }
-        }
-        get("reserves/delete/{id}") {
-            val id = call.parameters["id"]!!
-            //val idUser = reserveDaoRepository.getItem(id.toInt())!!.idUser
-            val idUser = reserveDaoRepository.getUserFromReserve(id.toInt())
-            reserveDaoRepository.deleteItem(id.toInt())
-            call.respondRedirect("../../users/$idUser")
-        }
 
-        //post neccesary to post the data from the input
-        post("reserve-action-page") {
-            var startTimeStamp: LocalDateTime = LocalDateTime.now()
-            var endTimeStamp: LocalDateTime = LocalDateTime.now()
-            var idRoom: Int = -1
-            var idUser: Int= -1
+            get("rooms/new") {
+                call.respondHtmlTemplate(LayoutTemplate(AddRoomTemplate())) {
+                }
+            }
 
-            val data = call.receiveMultipart()
-            data.forEachPart { part ->
-                when (part) {
-                    is PartData.FormItem -> {
-                        when (part.name) {
-                            "start" -> {
-                                startTimeStamp = formatter.formatToDateTime(part.value)
+            get("rooms/update/{id}") {
+                val id = call.parameters["id"]!!
+                val room = roomDaoRepository.getItem(id.toInt())
+                call.respondHtmlTemplate(LayoutTemplate(UpdateRoomTemplate(room!!))) {
+                }
+            }
+            post("room-action-page-update/{id}") {
+                val id = call.parameters["id"]!!
+                val data = call.receiveMultipart()
+               /* var name: String = ""
+                var description: String = ""
+                var fileName: String = ""
+
+                data.forEachPart { part ->
+                    when (part) {
+                        is PartData.FormItem -> {
+                            when (part.name) {
+                                "name" -> name = part.value
+                                "description" -> description = part.value
                             }
-                            "end" -> {
-                                endTimeStamp = formatter.formatToDateTime(part.value)
+                        }
+                        is PartData.FileItem -> {
+                            fileName = part.originalFileName as String
+                            var fileBytes = part.streamProvider().readBytes()
+                            File("uploads/$fileName").writeBytes(fileBytes) //create a File in the route that I want
+                        }
+                        else -> {}
+                    }
+
+                }*/
+                //val room = RoomInsertData(name, description, fileName) //pass all parameters to create the new User
+                val room = createRoomInsertData(data)
+                roomDaoRepository.updateItem(id.toInt(), room)
+                call.respondRedirect("../rooms")
+            }
+
+            post("room-action-page") {
+                /*var name: String = ""
+                var description: String = ""
+                var fileName: String = ""*/
+                val data = call.receiveMultipart()
+                val room = createRoomInsertData(data)
+                /*data.forEachPart { part ->
+                    when (part) {
+                        is PartData.FormItem -> {
+                            when (part.name) {
+                                "name" -> name = part.value
+                                "description" -> description = part.value
                             }
-                            "idRoom" -> idRoom = part.value.toInt()
-                            "idUser" -> idUser = part.value.toInt()
                         }
+                        is PartData.FileItem -> {
+                            fileName = part.originalFileName as String
+                            var fileBytes = part.streamProvider().readBytes()
+                            File("uploads/$fileName").writeBytes(fileBytes) //create a File in the route that I want
+                        }
+                        else -> {}
                     }
-                    is PartData.FileItem -> {
-                        val fileName = part.originalFileName as String
-                        var fileBytes = part.streamProvider().readBytes()
-                        File("uploads/$fileName").writeBytes(fileBytes) //create a File in the route that I want
-                    }
-                    else -> {}
+
+                }*/
+                //val room = RoomInsertData(name, description, fileName) //pass all parameters to create the new Room
+                roomDaoRepository.addItem(room)
+                call.respondRedirect("rooms")
+            }
+
+            get("reserves") {
+                val listReserves = reserveDaoRepository.getItemList()
+                call.respondHtmlTemplate(LayoutTemplate(AllReservesTemplate(listReserves))) {
                 }
             }
 
-            val reserve = ReserveInsertData(startTimeStamp.toString(), endTimeStamp.toString(), idRoom, idUser) //pass all parameters to create the new Reserve
-            if (reserveDaoRepository.verifyReserve(reserve)) {
-                reserveDaoRepository.addItem(reserve)
-                call.respondRedirect("users/${idUser}")
-            }else call.respondRedirect("reserves/new")
 
-        }
-
-        get("users") {
-            val listUsers = userDaoRepository.getItemList()
-            call.respondHtmlTemplate(LayoutTemplate(AllUsersTemplate(listUsers))) {
+            get("reserves/new") {
+                val listUsers = userDaoRepository.getItemList()
+                val listRooms = roomDaoRepository.getItemList()
+                call.respondHtmlTemplate(LayoutTemplate(AddReserveTemplate(listUsers,listRooms))) {
+                }
             }
-        }
-        get("users/{id}") {
-            val id = call.parameters["id"]!!
-            val user = userDaoRepository.getItem(id.toInt())
-            val reserves = reserveDaoRepository.getItemListOldByUser(id.toInt())
-            val reservesActives = reserveDaoRepository.getItemListActiveByUser(id.toInt())
-            call.respondHtmlTemplate(LayoutTemplate(DetailUserTemplate(user!!, reserves, reservesActives))) {
+
+            get("reserves/{id}") {
+                val id = call.parameters["id"]!!.toInt()
+                val reserve = reserveDaoRepository.getItem(id)
+                val userName = reserveDaoRepository.getUserName(id)
+                val roomName = reserveDaoRepository.getRoomName(id)
+                call.respondHtmlTemplate(LayoutTemplate(DetailReserveTemplate(reserve!!, userName, roomName))) {
+                }
             }
-        }
-
-        get("users/delete/{id}") {
-            val id = call.parameters["id"]!!
-            userDaoRepository.deleteItem(id.toInt())
-            val action = Action("delete", LocalDateTime.now().toString())
-            fileRepo.listActions += action
-            fileRepo.writeFile()
-            call.respondRedirect("../../users")
-        }
-
-        get("users/new") {
-            call.respondHtmlTemplate(LayoutTemplate(AddUserTemplate())) {
+            get("reserves/delete/{id}") {
+                val id = call.parameters["id"]!!
+                //val idUser = reserveDaoRepository.getItem(id.toInt())!!.idUser
+                val idUser = reserveDaoRepository.getUserFromReserve(id.toInt())
+                reserveDaoRepository.deleteItem(id.toInt())
+                call.respondRedirect("../../users/$idUser")
             }
-        }
-        //post neccesary to post the data from the input
-        post("user-action-page") {
-            var name: String = ""
-            var fileName: String = ""
 
-            val data = call.receiveMultipart()
+            //post neccesary to post the data from the input
+            post("reserve-action-page") {
+                var startTimeStamp: LocalDateTime = LocalDateTime.now()
+                var endTimeStamp: LocalDateTime = LocalDateTime.now()
+                var idRoom: Int = -1
+                var idUser: Int= -1
 
-            data.forEachPart { part ->
-                when (part) {
-                    is PartData.FormItem -> {
-                        when (part.name) {
-                            "name" -> name = part.value
+                val data = call.receiveMultipart()
+                data.forEachPart { part ->
+                    when (part) {
+                        is PartData.FormItem -> {
+                            when (part.name) {
+                                "start" -> {
+                                    startTimeStamp = formatter.formatToDateTime(part.value)
+                                }
+                                "end" -> {
+                                    endTimeStamp = formatter.formatToDateTime(part.value)
+                                }
+                                "idRoom" -> idRoom = part.value.toInt()
+                                "idUser" -> idUser = part.value.toInt()
+                            }
                         }
+                        is PartData.FileItem -> {
+                            val fileName = part.originalFileName as String
+                            var fileBytes = part.streamProvider().readBytes()
+                            File("uploads/$fileName").writeBytes(fileBytes) //create a File in the route that I want
+                        }
+                        else -> {}
                     }
-                    is PartData.FileItem -> {
-                        fileName = part.originalFileName as String
-                        var fileBytes = part.streamProvider().readBytes()
-                        File("uploads/$fileName").writeBytes(fileBytes) //create a File in the route that I want
-                    }
-                    else -> {}
                 }
 
+                val reserve = ReserveInsertData(startTimeStamp.toString(), endTimeStamp.toString(), idRoom, idUser) //pass all parameters to create the new Reserve
+                if (reserveDaoRepository.verifyReserve(reserve)) {
+                    reserveDaoRepository.addItem(reserve)
+                    call.respondRedirect("users/${idUser}")
+                }else call.respondRedirect("reserves/new")
+
             }
 
+            get("users") {
+                val listUsers = userDaoRepository.getItemList()
+                call.respondHtmlTemplate(LayoutTemplate(AllUsersTemplate(listUsers))) {
+                }
+            }
+            get("users/{id}") {
+                val id = call.parameters["id"]!!
+                val user = userDaoRepository.getItem(id.toInt())
+                val reserves = reserveDaoRepository.getItemListOldByUser(id.toInt())
+                val reservesActives = reserveDaoRepository.getItemListActiveByUser(id.toInt())
+                call.respondHtmlTemplate(LayoutTemplate(DetailUserTemplate(user!!, reserves, reservesActives))) {
+                }
+            }
 
-            val user = UserInsertData(name, fileName) //pass all parameters to create the new User
-            userDaoRepository.addItem(user)
-            val action = Action("add", LocalDateTime.now().toString())
-            fileRepo.listActions += action
-            fileRepo.writeFile()
-            val idNewUser = userDaoRepository.findIdByName(name)
-            call.respondRedirect("users/${idNewUser}")
-        }
+            get("users/delete/{id}") {
+                val id = call.parameters["id"]!!
+                userDaoRepository.deleteItem(id.toInt())
+                val action = Action("delete", LocalDateTime.now().toString())
+                fileRepo.listActions += action
+                fileRepo.writeFile()
+                call.respondRedirect("../../users")
+            }
 
-        post("user-action-page-update/{id}") {
-            var name: String = ""
-            var fileName: String = ""
+            get("users/new") {
+                call.respondHtmlTemplate(LayoutTemplate(AddUserTemplate())) {
+                }
+            }
+            //post neccesary to post the data from the input
+            post("user-action-page") {
+                var name: String = ""
+                var fileName: String = ""
 
-            val data = call.receiveMultipart()
-            data.forEachPart { part ->
-                when (part) {
-                    is PartData.FormItem -> {
-                        when (part.name) {
-                            "name" -> name = part.value
+                val data = call.receiveMultipart()
+
+                data.forEachPart { part ->
+                    when (part) {
+                        is PartData.FormItem -> {
+                            when (part.name) {
+                                "name" -> name = part.value
+                            }
                         }
+                        is PartData.FileItem -> {
+                            fileName = part.originalFileName as String
+                            var fileBytes = part.streamProvider().readBytes()
+                            File("uploads/$fileName").writeBytes(fileBytes) //create a File in the route that I want
+                        }
+                        else -> {}
                     }
-                    is PartData.FileItem -> {
-                        fileName = part.originalFileName as String
-                        var fileBytes = part.streamProvider().readBytes()
-                        File("uploads/$fileName").writeBytes(fileBytes) //create a File in the route that I want
-                    }
-                    else -> {}
+
                 }
 
+
+                val user = UserInsertData(name, fileName) //pass all parameters to create the new User
+                userDaoRepository.addItem(user)
+                val action = Action("add", LocalDateTime.now().toString())
+                fileRepo.listActions += action
+                fileRepo.writeFile()
+                val idNewUser = userDaoRepository.findIdByName(name)
+                call.respondRedirect("users/${idNewUser}")
             }
 
-            val user = UserInsertData(name, fileName) //pass all parameters to create the new User
-            userDaoRepository.addItem(user)
-            val action = Action("add", LocalDateTime.now().toString())
-            fileRepo.listActions += action
-            fileRepo.writeFile()
-            val idNewUser = userDaoRepository.findIdByName(name)
-            call.respondRedirect("users/${idNewUser}")
-        }
+            post("user-action-page-update/{id}") {
+                var name: String = ""
+                var fileName: String = ""
 
-        //this get is to see the image
-        get("/uploads/{imageName}") {
-            val imageName = call.parameters["imageName"]
-            var file = File("./uploads/$imageName")
-            if(file.exists()) call.respondFile(File("./uploads/$imageName"))
-            else call.respondText("Image not found", status = HttpStatusCode.NotFound)
+                val data = call.receiveMultipart()
+                data.forEachPart { part ->
+                    when (part) {
+                        is PartData.FormItem -> {
+                            when (part.name) {
+                                "name" -> name = part.value
+                            }
+                        }
+                        is PartData.FileItem -> {
+                            fileName = part.originalFileName as String
+                            var fileBytes = part.streamProvider().readBytes()
+                            File("uploads/$fileName").writeBytes(fileBytes) //create a File in the route that I want
+                        }
+                        else -> {}
+                    }
+
+                }
+
+                val user = UserInsertData(name, fileName) //pass all parameters to create the new User
+                userDaoRepository.addItem(user)
+                val action = Action("add", LocalDateTime.now().toString())
+                fileRepo.listActions += action
+                fileRepo.writeFile()
+                val idNewUser = userDaoRepository.findIdByName(name)
+                call.respondRedirect("users/${idNewUser}")
+            }
+
+            //this get is to see the image
+            get("/uploads/{imageName}") {
+                val imageName = call.parameters["imageName"]
+                var file = File("./uploads/$imageName")
+                if(file.exists()) call.respondFile(File("./uploads/$imageName"))
+                else call.respondText("Image not found", status = HttpStatusCode.NotFound)
+            }
         }
     }
 

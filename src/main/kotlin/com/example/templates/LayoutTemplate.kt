@@ -39,6 +39,14 @@ class LayoutTemplate<T : Template<FlowContent>>(private val template: T): Templa
             }
             nav ("navbar navbar-expand-lg navbar-light bg-primary"){
                 ul ("navbar-nav"){
+
+                    li ("nav-item"){
+                        a {
+                            href = "/reserve-sports/home"
+                            +"""Home"""
+                        }
+                    }
+
                     li ("nav-item"){
                         a {
                             href = "/reserve-sports/rooms"

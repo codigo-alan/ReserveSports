@@ -46,5 +46,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     //login-auth
     implementation("io.ktor:ktor-server-auth:$ktor_version")
+    //session-auth
+    implementation("io.ktor:ktor-server-sessions-jvm:$ktor_version")
 
 }
