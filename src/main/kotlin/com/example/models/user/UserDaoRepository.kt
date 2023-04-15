@@ -20,6 +20,7 @@ class UserDaoRepository() {
         UserDaoTable.insert {
             //it[id] = newUser.id
             it[name] = newUser.name
+            it[password] = newUser.password
             it[profileImg] = newUser.profileImg
         }
     }
@@ -36,6 +37,6 @@ class UserDaoRepository() {
     }
 
     private fun dbToModel(resultRow: ResultRow): User =
-        User(resultRow[UserDaoTable.id], resultRow[UserDaoTable.name], resultRow[UserDaoTable.profileImg])
+        User(resultRow[UserDaoTable.id], resultRow[UserDaoTable.name], resultRow[UserDaoTable.password], resultRow[UserDaoTable.profileImg])
 
 }

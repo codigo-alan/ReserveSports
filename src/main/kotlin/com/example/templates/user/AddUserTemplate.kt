@@ -27,6 +27,18 @@ class AddUserTemplate(): Template<FlowContent> {
                 }
 
                 label {
+                    htmlFor = "password"
+                    +"""Password:"""
+                }
+
+                input (classes = "form-control mb-2"){
+                    type = InputType.text
+                    id = "password"
+                    name = "password"
+                    value = ""
+                }
+
+                label {
                     htmlFor = "image"
                     +"""Imágen:"""
                 }

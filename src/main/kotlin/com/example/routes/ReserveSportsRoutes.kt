@@ -112,57 +112,15 @@ fun Route.reserveSportsRouting() {
             post("room-action-page-update/{id}") {
                 val id = call.parameters["id"]!!
                 val data = call.receiveMultipart()
-               /* var name: String = ""
-                var description: String = ""
-                var fileName: String = ""
-
-                data.forEachPart { part ->
-                    when (part) {
-                        is PartData.FormItem -> {
-                            when (part.name) {
-                                "name" -> name = part.value
-                                "description" -> description = part.value
-                            }
-                        }
-                        is PartData.FileItem -> {
-                            fileName = part.originalFileName as String
-                            var fileBytes = part.streamProvider().readBytes()
-                            File("uploads/$fileName").writeBytes(fileBytes) //create a File in the route that I want
-                        }
-                        else -> {}
-                    }
-
-                }*/
-                //val room = RoomInsertData(name, description, fileName) //pass all parameters to create the new User
                 val room = createRoomInsertData(data)
                 roomDaoRepository.updateItem(id.toInt(), room)
                 call.respondRedirect("../rooms")
             }
 
             post("room-action-page") {
-                /*var name: String = ""
-                var description: String = ""
-                var fileName: String = ""*/
+
                 val data = call.receiveMultipart()
                 val room = createRoomInsertData(data)
-                /*data.forEachPart { part ->
-                    when (part) {
-                        is PartData.FormItem -> {
-                            when (part.name) {
-                                "name" -> name = part.value
-                                "description" -> description = part.value
-                            }
-                        }
-                        is PartData.FileItem -> {
-                            fileName = part.originalFileName as String
-                            var fileBytes = part.streamProvider().readBytes()
-                            File("uploads/$fileName").writeBytes(fileBytes) //create a File in the route that I want
-                        }
-                        else -> {}
-                    }
-
-                }*/
-                //val room = RoomInsertData(name, description, fileName) //pass all parameters to create the new Room
                 roomDaoRepository.addItem(room)
                 call.respondRedirect("rooms")
             }
@@ -266,6 +224,7 @@ fun Route.reserveSportsRouting() {
             //post neccesary to post the data from the input
             post("user-action-page") {
                 var name: String = ""
+                var password: String = ""
                 var fileName: String = ""
 
                 val data = call.receiveMultipart()
@@ -275,6 +234,7 @@ fun Route.reserveSportsRouting() {
                         is PartData.FormItem -> {
                             when (part.name) {
                                 "name" -> name = part.value
+                                "password" -> password = part.value
                             }
                         }
                         is PartData.FileItem -> {
@@ -288,7 +248,7 @@ fun Route.reserveSportsRouting() {
                 }
 
 
-                val user = UserInsertData(name, fileName) //pass all parameters to create the new User
+                val user = UserInsertData(name, password, fileName) //pass all parameters to create the new User
                 userDaoRepository.addItem(user)
                 val action = Action("add", LocalDateTime.now().toString())
                 fileRepo.listActions += action
@@ -299,6 +259,7 @@ fun Route.reserveSportsRouting() {
 
             post("user-action-page-update/{id}") {
                 var name: String = ""
+                var password: String = ""
                 var fileName: String = ""
 
                 val data = call.receiveMultipart()
@@ -307,6 +268,7 @@ fun Route.reserveSportsRouting() {
                         is PartData.FormItem -> {
                             when (part.name) {
                                 "name" -> name = part.value
+                                "password" -> password = part.value
                             }
                         }
                         is PartData.FileItem -> {
@@ -319,7 +281,7 @@ fun Route.reserveSportsRouting() {
 
                 }
 
-                val user = UserInsertData(name, fileName) //pass all parameters to create the new User
+                val user = UserInsertData(name, password, fileName) //pass all parameters to create the new User
                 userDaoRepository.addItem(user)
                 val action = Action("add", LocalDateTime.now().toString())
                 fileRepo.listActions += action

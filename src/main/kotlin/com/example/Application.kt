@@ -3,6 +3,7 @@ package com.example
 import com.example.models.UserSession
 import com.example.models.reserve.ReserveDaoTable
 import com.example.models.room.RoomDaoTable
+import com.example.models.user.UserDaoRepository
 import com.example.models.user.UserDaoTable
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -20,20 +21,22 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 fun main() {
 
-    Database.connect("jdbc:postgresql://localhost:5432/sports", driver = "org.postgresql.Driver", user = "sports", password = "sports")//Para usar en ordenador Alan
+    //Database.connect("jdbc:postgresql://localhost:5432/sports", driver = "org.postgresql.Driver", user = "sports", password = "sports")//Para usar en ordenador Alan
     //Database.connect("jdbc:postgresql://localhost:5432/sports", driver = "org.postgresql.Driver", user = "sjo") //Para usar en ITB
+    Database.connect("jdbc:postgresql://localhost:5432/sports_dev", driver = "org.postgresql.Driver", user = "sports_dev", password = "sports_dev") //Alan. Nueva db para agregar usuario a base de datos
 
     transaction {
         addLogger(StdOutSqlLogger)
         //createTable if not exists
         SchemaUtils.create(RoomDaoTable)
-        SchemaUtils.create(UserDaoTable)
+        SchemaUtils.create(UserDaoTable) //be carefull modified
         SchemaUtils.create(ReserveDaoTable)
 
     }
 
     embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
         .start(wait = true)
+
 }
 
 fun Application.module() {
@@ -42,7 +45,7 @@ fun Application.module() {
     install(Authentication) {
         session<UserSession>("auth-session") {
             validate { session ->
-                if(session.name.startsWith("alan")) {
+                if(session.name.startsWith("alan")) {//TODO what this prefix does?
                     session
                 } else {
                     null
@@ -54,13 +57,16 @@ fun Application.module() {
 
         }
         form("auth-form") {
+            val listUsers = UserDaoRepository().getItemList()
             userParamName = "username"
             passwordParamName = "password"
-            validate { credentials ->
-                if (credentials.name == "alan" && credentials.password == "123456Aa") {
-                    UserIdPrincipal(credentials.name)
-                } else {
-                    null
+            listUsers.forEach {//TODO how to break this iteration?
+                validate { credentials ->
+                    if (credentials.name == it.name && credentials.password == it.password) {
+                        UserIdPrincipal(credentials.name)
+                    } else {
+                        null
+                    }
                 }
             }
             challenge {
