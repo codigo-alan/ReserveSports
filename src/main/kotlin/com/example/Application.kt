@@ -23,7 +23,8 @@ fun main() {
 
     //Database.connect("jdbc:postgresql://localhost:5432/sports", driver = "org.postgresql.Driver", user = "sports", password = "sports")//Para usar en ordenador Alan
     //Database.connect("jdbc:postgresql://localhost:5432/sports", driver = "org.postgresql.Driver", user = "sjo") //Para usar en ITB
-    Database.connect("jdbc:postgresql://localhost:5432/sports_dev", driver = "org.postgresql.Driver", user = "sports_dev", password = "sports_dev") //Alan. Nueva db para agregar usuario a base de datos
+    //Database.connect("jdbc:postgresql://localhost:5432/sports_dev", driver = "org.postgresql.Driver", user = "sports_dev", password = "sports_dev") //Alan. Nueva db para agregar usuario a base de datos
+    Database.connect("jdbc:postgresql://localhost:5432/sports_dev", driver = "org.postgresql.Driver", user = "sjo") //ITB. Nueva db para agregar usuario a base de datos
 
     transaction {
         addLogger(StdOutSqlLogger)
@@ -45,7 +46,7 @@ fun Application.module() {
     install(Authentication) {
         session<UserSession>("auth-session") {
             validate { session ->
-                if(session.name.startsWith("alan")) {//TODO what this prefix does?
+                if(session.name.isNotEmpty()) {//TODO what this prefix does?
                     session
                 } else {
                     null
@@ -57,16 +58,15 @@ fun Application.module() {
 
         }
         form("auth-form") {
-            val listUsers = UserDaoRepository().getItemList()
+            val userDaoRepository = UserDaoRepository()
             userParamName = "username"
             passwordParamName = "password"
-            listUsers.forEach {//TODO how to break this iteration?
-                validate { credentials ->
-                    if (credentials.name == it.name && credentials.password == it.password) {
-                        UserIdPrincipal(credentials.name)
-                    } else {
-                        null
-                    }
+            validate { credentials ->
+                val zero : Long = 0
+                if (userDaoRepository.findIdByNameAndPassword(credentials.name, credentials.password) != zero) {
+                    UserIdPrincipal(credentials.name)
+                } else {
+                    null
                 }
             }
             challenge {

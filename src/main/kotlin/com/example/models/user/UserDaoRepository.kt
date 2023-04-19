@@ -31,6 +31,12 @@ class UserDaoRepository() {
 
     }
 
+    fun findIdByNameAndPassword(name: String, password: String) = transaction {
+
+        UserDaoTable.slice(UserDaoTable.id).select { UserDaoTable.name eq name and( UserDaoTable.password eq password ) }.count()
+
+    }
+
     fun deleteItem(userId: Int) = transaction {
         ReserveDaoTable.deleteWhere { ReserveDaoTable.idUser eq userId }
         UserDaoTable.deleteWhere { UserDaoTable.id eq userId }
