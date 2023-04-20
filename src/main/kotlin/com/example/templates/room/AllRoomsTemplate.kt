@@ -1,6 +1,8 @@
 package com.example.templates.room
 
+import com.example.models.Role
 import com.example.models.room.Room
+import com.example.services.AuthService
 import io.ktor.server.html.*
 import kotlinx.html.*
 
@@ -8,11 +10,13 @@ class AllRoomsTemplate(private val rooms: List<Room>): Template<FlowContent> {
     override fun FlowContent.apply() {
         div("text-center m-3") {
             div("d-flex mx-2 mb-2") {
-                div {
-                    a {
-                        href = "rooms/new"
-                        button(classes="btn btn-primary") {
-                            +"""Crear nueva sala"""
+                if (AuthService.user.role == Role.ADMIN) {
+                    div {
+                        a {
+                            href = "rooms/new"
+                            button(classes="btn btn-primary") {
+                                +"""Crear nueva sala"""
+                            }
                         }
                     }
                 }

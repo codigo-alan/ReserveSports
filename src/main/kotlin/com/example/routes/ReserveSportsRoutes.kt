@@ -226,6 +226,7 @@ fun Route.reserveSportsRouting() {
                 var name: String = ""
                 var password: String = ""
                 var fileName: String = ""
+                //TODO add role
 
                 val data = call.receiveMultipart()
 
@@ -261,6 +262,7 @@ fun Route.reserveSportsRouting() {
                 var name: String = ""
                 var password: String = ""
                 var fileName: String = ""
+                //TODO add role
 
                 val data = call.receiveMultipart()
                 data.forEachPart { part ->

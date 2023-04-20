@@ -1,7 +1,9 @@
 package com.example.templates.room
 
+import com.example.models.Role
 import com.example.models.reserve.Reserve
 import com.example.models.room.Room
+import com.example.services.AuthService
 import io.ktor.server.html.*
 import kotlinx.html.*
 
@@ -11,20 +13,22 @@ class DetailRoomTemplate(private val room: Room, private val reserves: List<Rese
             div("d-flex justify-content-between") {
                 h4 { +"${room.name.uppercase()}" }
 
-                div {
-                    a {
-                        href = "../rooms/update/${room.id}"
-                        button(classes = "btn btn-secondary me-2") {
-                            +"""Editar"""
+                if (AuthService.user.role == Role.ADMIN) {
+                    div {
+                        a {
+                            href = "../rooms/update/${room.id}"
+                            button(classes = "btn btn-secondary me-2") {
+                                +"""Editar"""
+                            }
                         }
-                    }
-                    a {
-                        href = "../rooms/delete/${room.id}"
-                        button(classes = "btn btn-warning") {
-                            +"""Eliminar esta sala"""
+                        a {
+                            href = "../rooms/delete/${room.id}"
+                            button(classes = "btn btn-warning") {
+                                +"""Eliminar esta sala"""
+                            }
                         }
-                    }
 
+                    }
                 }
             }
 

@@ -9,6 +9,7 @@ import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import com.example.plugins.*
+import com.example.services.AuthService
 import io.ktor.http.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
@@ -23,8 +24,9 @@ fun main() {
 
     //Database.connect("jdbc:postgresql://localhost:5432/sports", driver = "org.postgresql.Driver", user = "sports", password = "sports")//Para usar en ordenador Alan
     //Database.connect("jdbc:postgresql://localhost:5432/sports", driver = "org.postgresql.Driver", user = "sjo") //Para usar en ITB
-    //Database.connect("jdbc:postgresql://localhost:5432/sports_dev", driver = "org.postgresql.Driver", user = "sports_dev", password = "sports_dev") //Alan. Nueva db para agregar usuario a base de datos
-    Database.connect("jdbc:postgresql://localhost:5432/sports_dev", driver = "org.postgresql.Driver", user = "sjo") //ITB. Nueva db para agregar usuario a base de datos
+
+    Database.connect("jdbc:postgresql://localhost:5432/sports_dev", driver = "org.postgresql.Driver", user = "sports_dev", password = "sports_dev") //Alan. Nueva db para agregar usuario a base de datos
+    //Database.connect("jdbc:postgresql://localhost:5432/sports_dev", driver = "org.postgresql.Driver", user = "sjo") //ITB. Nueva db para agregar usuario a base de datos
 
     transaction {
         addLogger(StdOutSqlLogger)
@@ -46,7 +48,7 @@ fun Application.module() {
     install(Authentication) {
         session<UserSession>("auth-session") {
             validate { session ->
-                if(session.name.isNotEmpty()) {//TODO what this prefix does?
+                if(session.name.isNotEmpty()) {
                     session
                 } else {
                     null
@@ -63,7 +65,10 @@ fun Application.module() {
             passwordParamName = "password"
             validate { credentials ->
                 val zero : Long = 0
+                //userDaoRepository.findIdByNameAndPassword(credentials.name, credentials.password) != zero
                 if (userDaoRepository.findIdByNameAndPassword(credentials.name, credentials.password) != zero) {
+                    val userId = userDaoRepository.findIdByNameAndPassword2(credentials.name, credentials.password).toString().toInt()
+                    AuthService.changeUser(userDaoRepository.getItem(userId!!)!!)
                     UserIdPrincipal(credentials.name)
                 } else {
                     null

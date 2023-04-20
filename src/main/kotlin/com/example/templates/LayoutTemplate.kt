@@ -1,5 +1,7 @@
 package com.example.templates
 
+import com.example.models.Role
+import com.example.services.AuthService
 import io.ktor.server.html.*
 import kotlinx.html.*
 
@@ -68,24 +70,27 @@ class LayoutTemplate<T : Template<FlowContent>>(private val template: T): Templa
                         }
                     }
 
-                    li {
-                        a {
-                            href = "/reserve-sports/users/new"
-                            +"""Nuevo usuario"""
+                    if (AuthService.user.role == Role.ADMIN) {
+                        li {
+                            a {
+                                href = "/reserve-sports/users/new"
+                                +"""Nuevo usuario"""
+                            }
+                        }
+                        li {
+                            a {
+                                href = "/reserve-sports/users"
+                                +"""Usuarios"""
+                            }
+                        }
+                        li {
+                            a {
+                                href = "/reserve-sports/actions"
+                                +"""Acciones"""
+                            }
                         }
                     }
-                    li {
-                        a {
-                            href = "/reserve-sports/users"
-                            +"""Usuarios"""
-                        }
-                    }
-                    li {
-                        a {
-                            href = "/reserve-sports/actions"
-                            +"""Acciones"""
-                        }
-                    }
+
                 }
             }
 

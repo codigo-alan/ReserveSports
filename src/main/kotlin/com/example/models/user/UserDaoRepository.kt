@@ -1,6 +1,7 @@
 package com.example.models.user
 
 
+import com.example.models.Role
 import com.example.models.reserve.ReserveDaoTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -22,6 +23,7 @@ class UserDaoRepository() {
             it[name] = newUser.name
             it[password] = newUser.password
             it[profileImg] = newUser.profileImg
+            it[role] = newUser.role.toString()
         }
     }
 
@@ -33,7 +35,17 @@ class UserDaoRepository() {
 
     fun findIdByNameAndPassword(name: String, password: String) = transaction {
 
-        UserDaoTable.slice(UserDaoTable.id).select { UserDaoTable.name eq name and( UserDaoTable.password eq password ) }.count()
+        UserDaoTable.slice(
+            UserDaoTable.id
+        ).select {
+            UserDaoTable.name eq name and( UserDaoTable.password eq password )
+        }.count()
+
+    }
+
+    fun findIdByNameAndPassword2(name: String, password: String) = transaction {
+
+        UserDaoTable.slice(UserDaoTable.id).select { UserDaoTable.name eq name and( UserDaoTable.password eq password ) }.last()[UserDaoTable.id]
 
     }
 
@@ -43,6 +55,20 @@ class UserDaoRepository() {
     }
 
     private fun dbToModel(resultRow: ResultRow): User =
-        User(resultRow[UserDaoTable.id], resultRow[UserDaoTable.name], resultRow[UserDaoTable.password], resultRow[UserDaoTable.profileImg])
+        User(
+            resultRow[UserDaoTable.id],
+            resultRow[UserDaoTable.name],
+            resultRow[UserDaoTable.password],
+            resultRow[UserDaoTable.profileImg],
+            convertRole(resultRow[UserDaoTable.role])
+        )
+
+    private fun convertRole(stringRole: String): Role {
+        return if (stringRole == "ADMIN") {
+            Role.ADMIN
+        }else{
+            Role.ENDUSER
+        }
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.example.templates
 
 import com.example.models.UserSession
+import com.example.services.AuthService
 import io.ktor.server.html.*
 import kotlinx.html.*
 
@@ -9,6 +10,9 @@ class HomeTemplate(private val userSession: UserSession) : Template<FlowContent>
         div("m-3") {
             div("d-flex justify-content-between mb-2") {
                 h4 { +"${userSession.name}" }
+            }
+            div("d-flex justify-content-between mb-2") {
+                h4 { +"${AuthService.user}" }
             }
             p { +"""Has ingresado: ${userSession.count} veces""" }
             div {

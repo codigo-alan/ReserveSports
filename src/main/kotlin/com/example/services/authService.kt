@@ -2,11 +2,11 @@ package com.example.services
 
 import com.example.models.user.User
 
-class AuthService private constructor(){
+object AuthService {
 
     lateinit var user: User
 
-    companion object{
-        val authService: AuthService by lazy { AuthService() }
+    fun changeUser(user: User){
+        this.user = user
     }
 }
