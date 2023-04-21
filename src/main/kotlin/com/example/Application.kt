@@ -66,8 +66,8 @@ fun Application.module() {
             validate { credentials ->
                 val zero : Long = 0
                 //userDaoRepository.findIdByNameAndPassword(credentials.name, credentials.password) != zero
-                if (userDaoRepository.findIdByNameAndPassword(credentials.name, credentials.password) != zero) {
-                    val userId = userDaoRepository.findIdByNameAndPassword2(credentials.name, credentials.password).toString().toInt()
+                if (userDaoRepository.findCountByNameAndPassword(credentials.name, credentials.password) != zero) {
+                    val userId = userDaoRepository.findIdByNameAndPassword(credentials.name, credentials.password).toString().toInt()
                     AuthService.changeUser(userDaoRepository.getItem(userId!!)!!)
                     UserIdPrincipal(credentials.name)
                 } else {

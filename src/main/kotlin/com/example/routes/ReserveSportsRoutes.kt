@@ -45,6 +45,47 @@ fun Route.reserveSportsRouting() {
             call.respondHtmlTemplate(LoginTemplate()) {
             }
         }
+        get("sign-up") {
+            //call.respondText { "Sign Up page not implemented yet" }
+            call.respondHtmlTemplate(LoginTemplate(true)) {
+            }
+        }
+        post("user-action-page") {
+            var name: String = ""
+            var password: String = ""
+            var fileName: String = ""
+            var roleString: String = ""
+
+            val data = call.receiveMultipart()
+
+            data.forEachPart { part ->
+                when (part) {
+                    is PartData.FormItem -> {
+                        when (part.name) {
+                            "name" -> name = part.value
+                            "password" -> password = part.value
+                            "role" -> roleString = part.value
+                        }
+                    }
+                    is PartData.FileItem -> {
+                        fileName = part.originalFileName as String
+                        var fileBytes = part.streamProvider().readBytes()
+                        File("uploads/$fileName").writeBytes(fileBytes) //create a File in the route that I want
+                    }
+                    else -> {}
+                }
+
+            }
+
+            val role = userDaoRepository.convertRole(roleString)
+            val user = UserInsertData(name, password, fileName, role) //pass all parameters to create the new User
+            userDaoRepository.addItem(user)
+            val action = Action("add", LocalDateTime.now().toString())
+            fileRepo.listActions += action
+            fileRepo.writeFile()
+            val idNewUser = userDaoRepository.findIdByName(name)
+            //call.respondRedirect("users/${idNewUser}")
+        }
     }
 
     authenticate("auth-form") {

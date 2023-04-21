@@ -1,9 +1,10 @@
 package com.example.templates
 
+import com.example.services.AuthService
 import io.ktor.server.html.*
 import kotlinx.html.*
 
-class LoginTemplate: Template<HTML> {
+class LoginTemplate(val signUp: Boolean = false): Template<HTML> {
 
     override fun HTML.apply() {
         head {
@@ -23,40 +24,120 @@ class LoginTemplate: Template<HTML> {
             }
 
             div("w-25 m-auto mt-3") {
-                div("d-flex mb-2") {
-                    h4 { +"Sign in" }
-                }
-                form(classes = "form-control"){
+                if(!signUp) {
+                    div("d-flex mb-2") {
+                        h4 { +"Sign in" }
+                    }
+                    form(classes = "form-control") {
 
-                    action = "/login"
-                    method = FormMethod.post
+                        action = "/login"
+                        method = FormMethod.post
 
-                    label {
-                        htmlFor = "username"
-                        +"""Nombre:"""
+                        label {
+                            htmlFor = "username"
+                            +"""Nombre:"""
+                        }
+
+                        input(classes = "form-control mb-2") {
+                            type = InputType.text
+                            id = "username"
+                            name = "username"
+                            value = ""
+                        }
+                        label {
+                            htmlFor = "password"
+                            +"""Contraseña:"""
+                        }
+
+                        input(classes = "form-control mb-2") {
+                            type = InputType.password
+                            id = "password"
+                            name = "password"
+                            value = ""
+                        }
+                        div("d-flex justify-content-end") {
+                            input(classes = "btn btn-primary") {
+                                type = InputType.submit
+                                value = "Login"
+                            }
+                        }
                     }
 
-                    input (classes = "form-control mb-2"){
-                        type = InputType.text
-                        id = "username"
-                        name = "username"
-                        value = ""
+                    div("d-flex justify-content-center mt-2") {
+                        a(classes = "btn btn-secondary") {
+                            href = "/sign-up"
+                            +"""Sign Up"""
+                        }
                     }
-                    label {
-                        htmlFor = "password"
-                        +"""Contraseña:"""
+                }else{
+                    div("d-flex mb-2") {
+                        h4 { +"Sign Up" }
+                    }
+                    form(classes = "form-control") {
+
+                        action = "/user-action-page"
+                        method = FormMethod.post
+
+                        label {
+                            htmlFor = "username"
+                            +"""Nombre:"""
+                        }
+
+                        input(classes = "form-control mb-2") {
+                            type = InputType.text
+                            id = "username"
+                            name = "username"
+                            value = ""
+                        }
+                        label {
+                            htmlFor = "password"
+                            +"""Contraseña:"""
+                        }
+
+                        input(classes = "form-control mb-2") {
+                            type = InputType.password
+                            id = "password"
+                            name = "password"
+                            value = ""
+                        }
+
+                        label {
+                            htmlFor = "role"
+                            +"""Role:"""
+                        }
+
+                        input(classes = "form-control mb-2") {
+                            type = InputType.text
+                            id = "role"
+                            name = "role"
+                            value = "ENDUSER"
+                        }
+
+                        label {
+                            htmlFor = "image"
+                            +"""Imágen:"""
+                        }
+
+                        input(classes = "form-control mb-3") {
+                            type = InputType.file //type of the input, file because is an image
+                            id = "image"
+                            name = "image"
+                            value = ""
+                        }
+
+
+                        div("d-flex justify-content-end") {
+                            input(classes = "btn btn-primary") {
+                                type = InputType.submit
+                                value = "Sign Up"
+                            }
+                        }
                     }
 
-                    input (classes = "form-control mb-2"){
-                        type = InputType.password
-                        id = "password"
-                        name = "password"
-                        value = ""
-                    }
-                    div("d-flex justify-content-end") {
-                        input(classes= "btn btn-primary") {
-                            type = InputType.submit
-                            value = "Login"
+                    div("d-flex justify-content-center mt-2") {
+                        a(classes = "btn btn-secondary") {
+                            href = "/"
+                            +"""Login"""
                         }
                     }
                 }
@@ -64,5 +145,6 @@ class LoginTemplate: Template<HTML> {
         }
 
     }
+
 
 }

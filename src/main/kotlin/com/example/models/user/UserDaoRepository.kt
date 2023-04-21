@@ -33,7 +33,7 @@ class UserDaoRepository() {
 
     }
 
-    fun findIdByNameAndPassword(name: String, password: String) = transaction {
+    fun findCountByNameAndPassword(name: String, password: String) = transaction {
 
         UserDaoTable.slice(
             UserDaoTable.id
@@ -43,7 +43,7 @@ class UserDaoRepository() {
 
     }
 
-    fun findIdByNameAndPassword2(name: String, password: String) = transaction {
+    fun findIdByNameAndPassword(name: String, password: String) = transaction {
 
         UserDaoTable.slice(UserDaoTable.id).select { UserDaoTable.name eq name and( UserDaoTable.password eq password ) }.last()[UserDaoTable.id]
 
