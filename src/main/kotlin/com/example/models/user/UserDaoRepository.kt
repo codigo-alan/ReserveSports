@@ -63,7 +63,7 @@ class UserDaoRepository() {
             convertRole(resultRow[UserDaoTable.role])
         )
 
-    private fun convertRole(stringRole: String): Role {
+    fun convertRole(stringRole: String): Role {
         return if (stringRole == "ADMIN") {
             Role.ADMIN
         }else{

@@ -226,7 +226,7 @@ fun Route.reserveSportsRouting() {
                 var name: String = ""
                 var password: String = ""
                 var fileName: String = ""
-                //TODO add role
+                var roleString: String = ""
 
                 val data = call.receiveMultipart()
 
@@ -236,6 +236,7 @@ fun Route.reserveSportsRouting() {
                             when (part.name) {
                                 "name" -> name = part.value
                                 "password" -> password = part.value
+                                "role" -> roleString = part.value
                             }
                         }
                         is PartData.FileItem -> {
@@ -248,8 +249,8 @@ fun Route.reserveSportsRouting() {
 
                 }
 
-
-                val user = UserInsertData(name, password, fileName) //pass all parameters to create the new User
+                val role = userDaoRepository.convertRole(roleString)
+                val user = UserInsertData(name, password, fileName, role) //pass all parameters to create the new User
                 userDaoRepository.addItem(user)
                 val action = Action("add", LocalDateTime.now().toString())
                 fileRepo.listActions += action
@@ -262,7 +263,7 @@ fun Route.reserveSportsRouting() {
                 var name: String = ""
                 var password: String = ""
                 var fileName: String = ""
-                //TODO add role
+                var roleString: String = ""
 
                 val data = call.receiveMultipart()
                 data.forEachPart { part ->
@@ -271,6 +272,7 @@ fun Route.reserveSportsRouting() {
                             when (part.name) {
                                 "name" -> name = part.value
                                 "password" -> password = part.value
+                                "role" -> roleString = part.value
                             }
                         }
                         is PartData.FileItem -> {
@@ -283,7 +285,8 @@ fun Route.reserveSportsRouting() {
 
                 }
 
-                val user = UserInsertData(name, password, fileName) //pass all parameters to create the new User
+                val role = userDaoRepository.convertRole(roleString)
+                val user = UserInsertData(name, password, fileName, role) //pass all parameters to create the new User
                 userDaoRepository.addItem(user)
                 val action = Action("add", LocalDateTime.now().toString())
                 fileRepo.listActions += action

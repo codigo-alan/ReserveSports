@@ -1,5 +1,6 @@
 package com.example.templates.user
 
+import com.example.services.AuthService
 import io.ktor.server.html.*
 import kotlinx.html.*
 
@@ -36,6 +37,23 @@ class AddUserTemplate(): Template<FlowContent> {
                     id = "password"
                     name = "password"
                     value = ""
+                }
+
+                label {
+                    htmlFor = "role"
+                    +"""Role:"""
+                }
+
+                select(classes = "form-select mb-2")  {
+                    name = "role"
+                    id = "role"
+                    AuthService.roles.forEach {
+                        option {
+                            value = "${it}"
+                            +"""${it}"""
+                        }
+                    }
+
                 }
 
                 label {

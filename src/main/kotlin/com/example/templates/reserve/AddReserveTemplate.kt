@@ -1,7 +1,9 @@
 package com.example.templates.reserve
 
+import com.example.models.Role
 import com.example.models.room.Room
 import com.example.models.user.User
+import com.example.services.AuthService
 import io.ktor.server.html.*
 import kotlinx.html.*
 
@@ -46,19 +48,29 @@ class AddReserveTemplate(private val listUsers: List<User>, private val listRoom
 
                 label (classes = "form-label") {
                     htmlFor = "idUser"
-                    +"""Usuario:"""
+                    +"""Usuario: ${AuthService.user.name}"""
                 }
-                select(classes = "form-select")  {
-                    name = "idUser"
-                    id = "idUser"
-                    listUsers.forEach {
-                        option {
-                            value = "${it.id}"
-                            +"""${it.name}"""
+                if (AuthService.user.role == Role.ADMIN) {
+                    select(classes = "form-select")  {
+                        name = "idUser"
+                        id = "idUser"
+                        listUsers.forEach {
+                            option {
+                                value = "${it.id}"
+                                +"""${it.name}"""
+                            }
                         }
                     }
-
+                } else {
+                    input (classes = "form-control mb-2"){
+                        type = InputType.text
+                        id = "idUser"
+                        name = "idUser"
+                        readonly = true
+                        value = "${AuthService.user.id}"
+                    }
                 }
+
 
                 br {
                 }
