@@ -13,7 +13,7 @@ class AddReserveTemplate(private val listUsers: List<User>, private val listRoom
             div("d-flex mb-2") {
                 h4 { +"Nueva reserva" }
             }
-            form(classes = "form-control")  {
+            form(classes = "form-control w-50 m-auto")  {
                 method = FormMethod.post //this is the method to do
                 action = "/reserve-sports/reserve-action-page" //route of action
                 encType= FormEncType.multipartFormData //neccesary to upload images

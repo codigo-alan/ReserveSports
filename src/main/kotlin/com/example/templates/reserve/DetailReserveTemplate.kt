@@ -23,7 +23,7 @@ class DetailReserveTemplate(private val reserve: Reserve, private val userName: 
 
                 }
             }
-            form{
+            form(classes = "w-50 m-auto"){
 
                 label (classes = "form-label") {
                     htmlFor = "start"

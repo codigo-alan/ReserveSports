@@ -22,11 +22,11 @@ class LoginTemplate: Template<HTML> {
                 attributes["crossorigin"] = "anonymous"
             }
 
-            div("m-3") {
+            div("w-25 m-auto mt-3") {
                 div("d-flex mb-2") {
                     h4 { +"Sign in" }
                 }
-                form{
+                form(classes = "form-control"){
 
                     action = "/login"
                     method = FormMethod.post

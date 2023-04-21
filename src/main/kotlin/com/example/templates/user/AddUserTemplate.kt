@@ -10,7 +10,7 @@ class AddUserTemplate(): Template<FlowContent> {
             div("d-flex mb-2") {
                 h4 { +"Nuevo usuario" }
             }
-            form{
+            form(classes = "form-control w-50 m-auto"){
                 method = FormMethod.post //this is the method to do
                 action = "/reserve-sports/user-action-page" //route of action
                 encType= FormEncType.multipartFormData //neccesary to upload images
@@ -20,12 +20,13 @@ class AddUserTemplate(): Template<FlowContent> {
                     +"""Nombre:"""
                 }
 
-                input (classes = "form-control mb-2"){
+                input(classes = "form-control mb-2") {
                     type = InputType.text
                     id = "name"
                     name = "name"
                     value = ""
                 }
+
 
                 label {
                     htmlFor = "password"
