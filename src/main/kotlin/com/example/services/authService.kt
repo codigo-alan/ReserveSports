@@ -1,6 +1,7 @@
 package com.example.services
 
 import com.example.models.Role
+import com.example.models.UserSession
 import com.example.models.user.User
 
 object AuthService {
@@ -11,4 +12,5 @@ object AuthService {
     fun changeUser(user: User){
         this.user = user
     }
+
 }

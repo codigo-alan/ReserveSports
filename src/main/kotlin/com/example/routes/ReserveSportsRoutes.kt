@@ -1,15 +1,13 @@
 package com.example.routes
 
-import com.example.models.Action
-import com.example.models.FileRepo
-import com.example.models.Formatter
-import com.example.models.UserSession
+import com.example.models.*
 import com.example.models.reserve.ReserveDaoRepository
 import com.example.models.reserve.ReserveInsertData
 import com.example.models.room.RoomDaoRepository
 import com.example.models.room.RoomInsertData
 import com.example.models.user.UserDaoRepository
 import com.example.models.user.UserInsertData
+import com.example.services.AuthService
 import com.example.templates.*
 import com.example.templates.reserve.AddReserveTemplate
 import com.example.templates.reserve.AllReservesTemplate
@@ -201,7 +199,8 @@ fun Route.reserveSportsRouting() {
                 var startTimeStamp: LocalDateTime = LocalDateTime.now()
                 var endTimeStamp: LocalDateTime = LocalDateTime.now()
                 var idRoom: Int = -1
-                var idUser: Int= -1
+                var idUser: Int = -1
+
 
                 val data = call.receiveMultipart()
                 data.forEachPart { part ->
@@ -211,35 +210,58 @@ fun Route.reserveSportsRouting() {
                                 "start" -> {
                                     startTimeStamp = formatter.formatToDateTime(part.value)
                                 }
+
                                 "end" -> {
                                     endTimeStamp = formatter.formatToDateTime(part.value)
                                 }
+
                                 "idRoom" -> idRoom = part.value.toInt()
                                 "idUser" -> idUser = part.value.toInt()
                             }
                         }
+
                         is PartData.FileItem -> {
                             val fileName = part.originalFileName as String
                             var fileBytes = part.streamProvider().readBytes()
                             File("uploads/$fileName").writeBytes(fileBytes) //create a File in the route that I want
                         }
+
                         else -> {}
                     }
                 }
 
-                val reserve = ReserveInsertData(startTimeStamp.toString(), endTimeStamp.toString(), idRoom, idUser) //pass all parameters to create the new Reserve
+                val reserve = ReserveInsertData(
+                    startTimeStamp.toString(),
+                    endTimeStamp.toString(),
+                    idRoom,
+                    idUser
+                ) //pass all parameters to create the new Reserve
                 if (reserveDaoRepository.verifyReserve(reserve)) {
                     reserveDaoRepository.addItem(reserve)
                     call.respondRedirect("users/${idUser}")
-                }else call.respondRedirect("reserves/new")
+                } else call.respondRedirect("reserves/new")
+
+
+
 
             }
+
 
             get("users") {
                 val listUsers = userDaoRepository.getItemList()
-                call.respondHtmlTemplate(LayoutTemplate(AllUsersTemplate(listUsers))) {
+
+                if (AuthService.user.role == Role.ADMIN) {
+                    call.respondHtmlTemplate(LayoutTemplate(AllUsersTemplate(listUsers))) {}
+                } else {
+                    val userSession = call.principal<UserSession>()
+                    call.respondHtmlTemplate(LayoutTemplate(HomeTemplate(userSession!!))) {
+                    }
                 }
+
+
+
             }
+
             get("users/{id}") {
                 val id = call.parameters["id"]!!
                 val user = userDaoRepository.getItem(id.toInt())
