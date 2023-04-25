@@ -25,14 +25,14 @@ fun main() {
     //Database.connect("jdbc:postgresql://localhost:5432/sports", driver = "org.postgresql.Driver", user = "sports", password = "sports")//Para usar en ordenador Alan
     //Database.connect("jdbc:postgresql://localhost:5432/sports", driver = "org.postgresql.Driver", user = "sjo") //Para usar en ITB
 
-    Database.connect("jdbc:postgresql://localhost:5432/sports_dev", driver = "org.postgresql.Driver", user = "sports_dev", password = "sports_dev") //Alan. Nueva db para agregar usuario a base de datos
-    //Database.connect("jdbc:postgresql://localhost:5432/sports_dev", driver = "org.postgresql.Driver", user = "sjo") //ITB. Nueva db para agregar usuario a base de datos
+    //Database.connect("jdbc:postgresql://localhost:5432/sports_dev", driver = "org.postgresql.Driver", user = "sports_dev", password = "sports_dev") //Alan. Nueva db para agregar usuario a base de datos
+    Database.connect("jdbc:postgresql://localhost:5432/sports_dev", driver = "org.postgresql.Driver", user = "sjo") //ITB. Nueva db para agregar usuario a base de datos.
 
     transaction {
         addLogger(StdOutSqlLogger)
         //createTable if not exists
         SchemaUtils.create(RoomDaoTable)
-        SchemaUtils.create(UserDaoTable) //be carefull modified
+        SchemaUtils.create(UserDaoTable)
         SchemaUtils.create(ReserveDaoTable)
 
     }
