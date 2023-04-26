@@ -1,6 +1,8 @@
 package com.example.templates.reserve
 
+import com.example.models.Role
 import com.example.models.reserve.Reserve
+import com.example.services.AuthService
 import io.ktor.server.html.*
 import kotlinx.html.*
 import org.jetbrains.exposed.sql.Query
@@ -13,14 +15,16 @@ class DetailReserveTemplate(private val reserve: Reserve, private val userName: 
         div("m-3") {
             div("d-flex justify-content-between mb-2") {
                 h4 { +"Reserva nro: ${reserve?.id}" }
-                div {
-                    a {
-                        href = "../reserves/delete/${reserve?.id}"
-                        button(classes = "btn btn-warning"){
-                            +"""Borrar"""
+                if ((AuthService.user.id.toString().toInt() == reserve.idUser) || (AuthService.user.role == Role.ADMIN)) {
+                    div {
+                        a {
+                            href = "../reserves/delete/${reserve?.id}"
+                            button(classes = "btn btn-warning"){
+                                +"""Borrar"""
+                            }
                         }
-                    }
 
+                    }
                 }
             }
             form(classes = "w-50 m-auto"){

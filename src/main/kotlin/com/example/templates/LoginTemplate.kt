@@ -69,13 +69,14 @@ class LoginTemplate(val signUp: Boolean = false): Template<HTML> {
                             +"""Sign Up"""
                         }
                     }
-                }else{
+                }
+                else{
                     div("d-flex mb-2") {
                         h4 { +"Sign Up" }
                     }
                     form(classes = "form-control") {
 
-                        action = "/user-action-page"
+                        action = "/user-action-page" //TODO not works this post
                         method = FormMethod.post
 
                         label {

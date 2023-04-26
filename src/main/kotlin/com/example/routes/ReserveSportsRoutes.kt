@@ -48,7 +48,7 @@ fun Route.reserveSportsRouting() {
             call.respondHtmlTemplate(LoginTemplate(true)) {
             }
         }
-        post("user-action-page") {
+        post("user-action-page") { //TODO not works this post
             var name: String = ""
             var password: String = ""
             var fileName: String = ""
@@ -112,8 +112,7 @@ fun Route.reserveSportsRouting() {
                 }
             }
 
-
-             get("actions") {
+            get("actions") {
                  val listActions = fileRepo.listActions
                  call.respond(listActions)
              }
@@ -132,20 +131,28 @@ fun Route.reserveSportsRouting() {
             }
 
             get("rooms/delete/{id}") {
-                val id = call.parameters["id"]!!
-                roomDaoRepository.deleteItem(id.toInt())
+                if (AuthService.user.role == Role.ADMIN) {
+                    val id = call.parameters["id"]!!
+                    roomDaoRepository.deleteItem(id.toInt())
+                }
                 call.respondRedirect("../../rooms")
             }
 
             get("rooms/new") {
-                call.respondHtmlTemplate(LayoutTemplate(AddRoomTemplate())) {
+                if (AuthService.user.role == Role.ADMIN){
+                    call.respondHtmlTemplate(LayoutTemplate(AddRoomTemplate())) {}
+                }else{
+                    call.respondRedirect("../rooms")
                 }
             }
 
             get("rooms/update/{id}") {
-                val id = call.parameters["id"]!!
-                val room = roomDaoRepository.getItem(id.toInt())
-                call.respondHtmlTemplate(LayoutTemplate(UpdateRoomTemplate(room!!))) {
+                if (AuthService.user.role == Role.ADMIN) {
+                    val id = call.parameters["id"]!!
+                    val room = roomDaoRepository.getItem(id.toInt())
+                    call.respondHtmlTemplate(LayoutTemplate(UpdateRoomTemplate(room!!))) {}
+                } else {
+                    call.respondRedirect("../../rooms")
                 }
             }
             post("room-action-page-update/{id}") {
@@ -188,10 +195,13 @@ fun Route.reserveSportsRouting() {
             }
             get("reserves/delete/{id}") {
                 val id = call.parameters["id"]!!
-                //val idUser = reserveDaoRepository.getItem(id.toInt())!!.idUser
                 val idUser = reserveDaoRepository.getUserFromReserve(id.toInt())
-                reserveDaoRepository.deleteItem(id.toInt())
-                call.respondRedirect("../../users/$idUser")
+                if ((AuthService.user.id.toString().toInt() == id.toInt()) || (AuthService.user.role == Role.ADMIN)) {
+                    reserveDaoRepository.deleteItem(id.toInt())
+                    call.respondRedirect("../../users/$idUser")
+                } else {
+                    call.respondRedirect("../../users/$idUser")
+                }
             }
 
             //post neccesary to post the data from the input
@@ -272,16 +282,23 @@ fun Route.reserveSportsRouting() {
             }
 
             get("users/delete/{id}") {
-                val id = call.parameters["id"]!!
-                userDaoRepository.deleteItem(id.toInt())
-                val action = Action("delete", LocalDateTime.now().toString())
-                fileRepo.listActions += action
-                fileRepo.writeFile()
-                call.respondRedirect("../../users")
+                if (AuthService.user.role == Role.ADMIN) {
+                    val id = call.parameters["id"]!!
+                    userDaoRepository.deleteItem(id.toInt())
+                    val action = Action("delete", LocalDateTime.now().toString())
+                    fileRepo.listActions += action
+                    fileRepo.writeFile()
+                    call.respondRedirect("../../users")
+                } else {
+                    call.respondRedirect("../../users")
+                }
             }
 
             get("users/new") {
-                call.respondHtmlTemplate(LayoutTemplate(AddUserTemplate())) {
+                if (AuthService.user.role == Role.ADMIN) {
+                    call.respondHtmlTemplate(LayoutTemplate(AddUserTemplate())) {}
+                }else{
+                    call.respondRedirect("../users")
                 }
             }
             //post neccesary to post the data from the input

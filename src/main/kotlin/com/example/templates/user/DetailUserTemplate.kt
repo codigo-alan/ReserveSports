@@ -1,7 +1,9 @@
 package com.example.templates.user
 
+import com.example.models.Role
 import com.example.models.reserve.Reserve
 import com.example.models.user.User
+import com.example.services.AuthService
 import io.ktor.server.html.*
 import kotlinx.html.*
 
@@ -12,14 +14,16 @@ class DetailUserTemplate(private val user: User, private val reserves: List<Rese
         div("m-3") {
             div("d-flex justify-content-between mb-2") {
                 h4 { +"Usuario nro: ${user?.id}" }
-                div {
-                    a {
-                        href = "../users/delete/${user.id}"
-                        button(classes = "btn btn-warning"){
-                            +"""Borrar"""
+                if (AuthService.user.role == Role.ADMIN) {
+                    div {
+                        a {
+                            href = "../users/delete/${user.id}"
+                            button(classes = "btn btn-warning"){
+                                +"""Borrar"""
+                            }
                         }
-                    }
 
+                    }
                 }
             }
             p { +"""Nombre de usuario: ${user?.name}""" }
